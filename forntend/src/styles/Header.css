@@ -1,0 +1,17 @@
+.container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(41, 39, 39);
+}
+
+.container-body{
+    align-items: center;
+    background-color: rgb(5, 5, 5);
+}
+
+.wrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
