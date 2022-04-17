@@ -1,50 +1,63 @@
-import { Box, Button } from '@material-ui/core'
-import React from 'react'
-import 'src/styles/Header.css'
-import MenuIcon from '@mui/icons-material/Menu';
-import BedIcon from '@mui/icons-material/Bed';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import LuggageIcon from '@mui/icons-material/Luggage';
-function Home() {
+import { Box, Button } from "@material-ui/core";
+import React, { useState } from "react";
+import "../styles/Header.css";
+import MenuIcon from "@mui/icons-material/Menu";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import LuggageIcon from "@mui/icons-material/Luggage";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+
+function Home(props) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Box display="flex" className='container-body'
-         width={1500} height={80} >
+    <Box
+      display="flex"
+      className="container-body"
+      width={1680}
+      height={80}
+      alignItems="center"
+    >
       <Button>
-        <MenuIcon
-        fontSize='medium'
-        style={{color:'white'}}></MenuIcon>
-      </Button> 
-      <Button
-        ml={10}
-        startIcon={<BedIcon/>}
-        variant='text'
-        size='large'
-        style={{color:'white',textTransform:'none'}}
-        >
-        Booking.com
+        <MenuIcon fontSize="medium" style={{ color: "white" }}></MenuIcon>
       </Button>
-      <Box display="flex" className='wrapper'>  
-      <Button
-        ml={100}
-        startIcon={<PersonOutlineIcon/>}
-        variant='text'
-        size='large'
-        style={{color:'white',textTransform:'none'}}
+      <Box className="wrapper">
+        <Button
+          ml={10}
+          variant="text"
+          size="large"
+          style={{ color: "white", textTransform: "none" }}
         >
-        Sign in or Join
-      </Button>
-      <Button
-        ml={10}
-        startIcon={<LuggageIcon/>}
-        variant='text'
-        size='large'
-        style={{color:'white',textTransform:'none'}}
+          COVID-19
+        </Button>
+        <Button
+          ml={10}
+          startIcon={<PersonOutlineIcon />}
+          variant="text"
+          size="large"
+          style={{ color: "white", textTransform: "none" }}
+          onClick={() => setOpen(!open)}
         >
-        My Bookings
-      </Button>
-    </Box>    
+          Sign In or Join
+          <Button
+            startIcon={<KeyboardArrowDownIcon />}
+            variant="text"
+            size="large"
+            style={{ color: "white", textTransform: "none" }}
+          ></Button>
+          {open && props.children}
+        </Button>
+        <Button
+          ml={10}
+          startIcon={<LuggageIcon />}
+          variant="text"
+          size="large"
+          style={{ color: "white", textTransform: "none" }}
+        >
+          My Trips
+        </Button>
+      </Box>
     </Box>
-  )
+  );
 }
 
-export default Home
+export default Home;
