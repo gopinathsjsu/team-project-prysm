@@ -1,27 +1,42 @@
 package com.cmpe202.prysm.controller;
 
+import com.cmpe202.prysm.dao.HotelBookingDao;
 import com.cmpe202.prysm.model.Customer;
 import com.cmpe202.prysm.model.Hotel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.sql.SQLException;
 
 import java.util.*;
 
 @RestController
 public class HotelBookingController {
 
-    //login
-    @PostMapping(path = "loginUser",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity loginUser(@RequestBody Customer customer) {
-        //fetch from DB and check if user exists
+    Logger logger = LoggerFactory.getLogger(HotelBookingController.class);
 
-        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+    HotelBookingDao hotelBookingDao=new HotelBookingDao();
+
+    public HotelBookingController() throws SQLException {
+    }
+
+    //login
+    @PostMapping(path = "loginUser")
+    public String loginUser(@RequestBody Customer customer) throws SQLException {
+        //fetch from DB and check if user exists
+        logger.info("here");
+        if(hotelBookingDao.loginUser(customer.getUsername(), customer.getPassword()))
+            return "Success";
+
+        return "Fail";
     }
 
     //createUser
@@ -30,7 +45,6 @@ public class HotelBookingController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity registerUser(@RequestBody Customer customer) {
         //check if all the required information is provided by the user and register User
-
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 
@@ -41,8 +55,8 @@ public class HotelBookingController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Hotel> fetchHotels(@RequestBody String city, @RequestBody String fromDate,
-                                    @RequestBody String toDate, @RequestBody Integer numOfRooms,
-                                    @RequestBody Integer guestCount) {
+                                   @RequestBody String toDate, @RequestBody Integer numOfRooms,
+                                   @RequestBody Integer guestCount) {
         //check if all the required information is provided by the user and register User
 
         return new ArrayList<Hotel>();
