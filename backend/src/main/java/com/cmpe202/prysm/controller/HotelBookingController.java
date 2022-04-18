@@ -43,9 +43,14 @@ public class HotelBookingController {
     @PostMapping(path = "registerUser",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity registerUser(@RequestBody Customer customer) {
+    public String registerUser(@RequestBody Customer customer) throws SQLException {
         //check if all the required information is provided by the user and register User
-        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        logger.info("herein in register");
+        if(hotelBookingDao.registerUser(customer.getUsername(), customer.getPassword(), customer.getName())){
+            return "db updated";
+
+        }
+        return "falied to update db";
     }
 
     //manage hotel rewards account
@@ -54,7 +59,7 @@ public class HotelBookingController {
     @PostMapping(path = "fetchHotels",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Hotel> fetchHotels(@RequestBody String city, @RequestBody String fromDate,
+    public List<Hotel> fetchHotels(@RequestBody String country,@RequestBody String city, @RequestBody String fromDate,
                                    @RequestBody String toDate, @RequestBody Integer numOfRooms,
                                    @RequestBody Integer guestCount) {
         //check if all the required information is provided by the user and register User
