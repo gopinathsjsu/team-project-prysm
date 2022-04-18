@@ -11,7 +11,7 @@ import {
   Offcanvas,
   Button,
 } from "react-bootstrap";
-
+import LoginButton from "./login/loginModal";
 function NavBar() {
   return (
     <div>
@@ -24,7 +24,10 @@ function NavBar() {
               <Nav.Link href="#home">Home</Nav.Link>
               <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                 {/* <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item> */}
-                <NavDropdown.Item href="#action/3.2">Login</NavDropdown.Item>
+                <NavDropdown.Item >
+                  
+                  <LoginButton />
+                </NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="#action/3.3">Sign Up</NavDropdown.Item>
               </NavDropdown>
