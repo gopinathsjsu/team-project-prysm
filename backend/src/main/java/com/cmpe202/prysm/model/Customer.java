@@ -10,6 +10,7 @@ public class Customer {
     private String password;
 
     private String name;
+
     public String getName() {
         return name;
     }
@@ -17,8 +18,6 @@ public class Customer {
     public void setName(String name) {
         this.name = name;
     }
-
-
 
     public String getUsername() {
         return username;

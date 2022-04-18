@@ -43,8 +43,6 @@ public class Hotel {
         this.city = city;
     }
 
-
-
     public String getHotel_name() {
         return hotel_name;
     }
