@@ -24,8 +24,7 @@ function NavBar() {
               <Nav.Link href="#home">Home</Nav.Link>
               <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                 {/* <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item> */}
-                <NavDropdown.Item >
-                  
+                <NavDropdown.Item>
                   <LoginButton />
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
