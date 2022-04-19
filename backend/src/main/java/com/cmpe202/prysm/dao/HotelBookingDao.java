@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public class HotelBookingDao {
-    public final String dbUrl = "jdbc:mysql://127.0.0.1:3306/cmpe202";
+    public final String dbUrl = "jdbc:mysql://127.0.0.1:3306/cmpe202project";
     public final String username = "root";
     public final String password = "password";
 

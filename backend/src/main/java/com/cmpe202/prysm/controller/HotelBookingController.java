@@ -6,6 +6,7 @@ import com.cmpe202.prysm.model.Hotel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 @RestController
+//@CrossOrigin(origins = "http://localhost:3000")
 public class HotelBookingController {
 
     Logger logger = LoggerFactory.getLogger(HotelBookingController.class);
