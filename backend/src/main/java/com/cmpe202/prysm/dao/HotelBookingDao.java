@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class HotelBookingDao {
@@ -48,30 +50,88 @@ public class HotelBookingDao {
         }
         return false;
     }
-    public List<Hotel> fetchHotels(String country, String city, String fromDate,
+    public List<Hotel> fetchHotels(String city, String country, String fromDate,
                                    String toDate,  Integer numOfRooms,
                                    Integer guestCount) throws SQLException {
 
 //        String sql = "select hotel_id, hotel_name, country, city from hotel where country=?, city=?";
-        String sql = "select hotel_id, hotel_name, country, city from hotel H inner join booking B on " +
-                " H.hotel_id = B.hotel_id where H.country=?, H.city=?, B.from_date !=?, b.to_date !=?";
+        logger.info(country);
+        logger.info(city);
+        logger.info(String.valueOf(fromDate));
+        logger.info(String.valueOf(toDate));
+        logger.info(String.valueOf(numOfRooms));
+        logger.info(String.valueOf(guestCount));
+        String sql1 = "select H.hotel_id, count(*) from hotel H join room R on H.hotel_id = R.hotel_id where H.city=? and H.country=? group by H.hotel_id having count(*)>= ?;";
 
-        PreparedStatement preparedStatement=connection.prepareStatement(sql);
+        PreparedStatement preparedStatement=connection.prepareStatement(sql1);
         logger.info("connection established");
-        preparedStatement.setString(1,country);
-        preparedStatement.setString(2,city);
-        preparedStatement.setString(3,fromDate);
-        preparedStatement.setString(4,toDate);
+        preparedStatement.setString(1,city);
+        preparedStatement.setString(2,country);
+        preparedStatement.setInt(3,numOfRooms);
         ResultSet resultSet= preparedStatement.executeQuery();
-        List<Hotel> hotels = new ArrayList<>();
-        while (resultSet.next()){
-            String id = resultSet.getString("hotel_id");
-            String name = resultSet.getString("hotel_name");
-            String hotel_country = resultSet.getString("country");
-            String hotel_city = resultSet.getString("city");
-            Hotel hotel = new Hotel(id, name, hotel_country, hotel_city);
-            hotels.add(hotel);
+        logger.info("Blank",String.valueOf(resultSet));
+        HashMap<String,Integer> hotelCountMap = new HashMap<String, Integer>();
+        while(resultSet.next()){
+            logger.info("inside while");
+            logger.info(String.valueOf(resultSet.getRow()));
+
+            hotelCountMap.put(resultSet.getString(1),resultSet.getInt(2));
         }
-        return hotels;
+//        for(Map.Entry<String,Integer>entry:HashMap.entrySet()){
+//            String key=hotelCount.getKey();
+//            Integer value=hotelCount.getValue();
+//        }
+        logger.info("test values {}", hotelCountMap);
+        List<String> hotelIds=new ArrayList<>();
+        for(String hotelId : hotelCountMap.keySet()){
+            int value = hotelCountMap.get(hotelId);
+            if(value>=numOfRooms){
+                String sql2="select count(*) from booking B where hotel_id=? and (? between B.from_date and B.to_date) or (? between B.from_date and B.to_date) group by ?;";
+                PreparedStatement preparedStatement2=connection.prepareStatement(sql2);
+                preparedStatement2.setString(1,hotelId);
+                preparedStatement2.setString(2,fromDate);
+                preparedStatement2.setString(3,toDate);
+                preparedStatement2.setString(4,hotelId);
+
+                ResultSet resultSet2= preparedStatement.executeQuery();
+                int roomsOccupied=resultSet2.getRow();
+                if(value-roomsOccupied>=numOfRooms){
+                    hotelIds.add(hotelId);
+                }
+            }
+        }
+        logger.info("test list {}", hotelIds);
+
+        List<Hotel> validHotels=new ArrayList<>();
+        for(String hotelId2:hotelIds){
+            String sql3="select * from hotel where hotel_id=?";
+            PreparedStatement preparedStatement3=connection.prepareStatement(sql3);
+            preparedStatement3.setString(1,hotelId2);
+            ResultSet resultSet3=preparedStatement3.executeQuery();
+            logger.info(hotelId2);
+            logger.info(String.valueOf(resultSet3.getRow()));
+            while(resultSet3.next()){
+                Hotel hotel=new Hotel();
+                hotel.setHotel_id(resultSet3.getString(1));
+                hotel.setHotel_name(resultSet3.getString(2));
+                hotel.setCountry(resultSet3.getString(3));
+                hotel.setCity(resultSet3.getString(4));
+                hotel.setDaily_continental_breakfast(resultSet3.getBoolean(5));
+                hotel.setFitness_room(resultSet3.getBoolean(6));
+                hotel.setSwimming_pool(resultSet3.getBoolean(7));
+                hotel.setJacuzzi(resultSet3.getBoolean(8));
+                hotel.setDaily_parking(resultSet3.getBoolean(9));
+                hotel.setAll_meals(resultSet3.getBoolean(10));
+                hotel.setFromDate(fromDate);
+                hotel.setToDate(toDate);
+                hotel.setNumOfGuests(guestCount);
+                hotel.setNumOfRooms(numOfRooms);
+                validHotels.add(hotel);
+            }
+
+
+        }
+
+        return validHotels;
     }
 }

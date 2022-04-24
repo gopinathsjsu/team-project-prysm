@@ -56,12 +56,10 @@ public class HotelBookingController {
     @PostMapping(path = "fetchHotels",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Hotel> fetchHotels(@RequestBody String country,@RequestBody String city, @RequestBody String fromDate,
-                                   @RequestBody String toDate, @RequestBody Integer numOfRooms,
-                                   @RequestBody Integer guestCount) {
+    public List<Hotel> fetchHotels(@RequestBody Hotel hotel) throws SQLException {
         //check if all the required information is provided by the user and register User
+        return hotelBookingDao.fetchHotels(hotel.getCity(),hotel.getCountry(),hotel.getFromDate(),hotel.getToDate(),hotel.getNumOfRooms(),hotel.getNumOfGuests());
 
-        return new ArrayList<Hotel>();
     }
 
     //Book one or more rooms for stay up to 1 week
