@@ -1,6 +1,7 @@
 import React from "react";
 import { Form, Button } from "react-bootstrap";
 import axios from "axios";
+import { backend } from "../config";
 const LoginForm = () => {
   const [formValue, setformValue] = React.useState({
     email: "",
@@ -15,10 +16,7 @@ const LoginForm = () => {
     console.log(data);
     try {
       // make axios post request
-      const response = await axios.post(
-        "http://localhost:8080/loginUser",
-        data
-      );
+      const response = await axios.post(`${backend}/loginUser`, data);
       console.log(response);
     } catch (error) {
       console.log(error);
