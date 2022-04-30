@@ -55,25 +55,25 @@ public class HotelBookingDao {
                                    Integer guestCount) throws SQLException {
 
 //        String sql = "select hotel_id, hotel_name, country, city from hotel where country=?, city=?";
-        logger.info(country);
-        logger.info(city);
-        logger.info(String.valueOf(fromDate));
-        logger.info(String.valueOf(toDate));
-        logger.info(String.valueOf(numOfRooms));
-        logger.info(String.valueOf(guestCount));
+//        logger.info(country);
+//        logger.info(city);
+//        logger.info(String.valueOf(fromDate));
+//        logger.info(String.valueOf(toDate));
+//        logger.info(String.valueOf(numOfRooms));
+//        logger.info(String.valueOf(guestCount));
         String sql1 = "select H.hotel_id, count(*) from hotel H join room R on H.hotel_id = R.hotel_id where H.city=? and H.country=? group by H.hotel_id having count(*)>= ?;";
 
         PreparedStatement preparedStatement=connection.prepareStatement(sql1);
-        logger.info("connection established");
+//        logger.info("connection established");
         preparedStatement.setString(1,city);
         preparedStatement.setString(2,country);
         preparedStatement.setInt(3,numOfRooms);
         ResultSet resultSet= preparedStatement.executeQuery();
-        logger.info("Blank",String.valueOf(resultSet));
+//        logger.info("Blank",String.valueOf(resultSet));
         HashMap<String,Integer> hotelCountMap = new HashMap<String, Integer>();
         while(resultSet.next()){
-            logger.info("inside while");
-            logger.info(String.valueOf(resultSet.getRow()));
+//            logger.info("inside while");
+//            logger.info(String.valueOf(resultSet.getRow()));
 
             hotelCountMap.put(resultSet.getString(1),resultSet.getInt(2));
         }
@@ -81,7 +81,7 @@ public class HotelBookingDao {
 //            String key=hotelCount.getKey();
 //            Integer value=hotelCount.getValue();
 //        }
-        logger.info("test values {}", hotelCountMap);
+//        logger.info("test values {}", hotelCountMap);
         List<String> hotelIds=new ArrayList<>();
         for(String hotelId : hotelCountMap.keySet()){
             int value = hotelCountMap.get(hotelId);
@@ -100,7 +100,7 @@ public class HotelBookingDao {
                 }
             }
         }
-        logger.info("test list {}", hotelIds);
+//        logger.info("test list {}", hotelIds);
 
         List<Hotel> validHotels=new ArrayList<>();
         for(String hotelId2:hotelIds){
@@ -108,8 +108,8 @@ public class HotelBookingDao {
             PreparedStatement preparedStatement3=connection.prepareStatement(sql3);
             preparedStatement3.setString(1,hotelId2);
             ResultSet resultSet3=preparedStatement3.executeQuery();
-            logger.info(hotelId2);
-            logger.info(String.valueOf(resultSet3.getRow()));
+
+
             while(resultSet3.next()){
                 Hotel hotel=new Hotel();
                 hotel.setHotel_id(resultSet3.getString(1));
@@ -127,6 +127,7 @@ public class HotelBookingDao {
                 hotel.setNumOfGuests(guestCount);
                 hotel.setNumOfRooms(numOfRooms);
                 validHotels.add(hotel);
+
             }
 
 
