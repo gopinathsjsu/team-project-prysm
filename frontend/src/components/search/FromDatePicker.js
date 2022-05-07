@@ -73,14 +73,6 @@ function FromDatePicker() {
           />
         </div>
       </div>
-      {/* {checkInDate && checkOutDate && (
-        <div className="summary">
-          <p>
-            You book a hotel from {moment(checkInDate).format("LL")} to{" "}
-            {moment(checkOutDate).format("LL")}.
-          </p>
-        </div>
-      )} */}
       <br />
       <br />
       <div className="align">
