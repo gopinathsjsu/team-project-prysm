@@ -1,6 +1,8 @@
 import React from "react";
 import { Form, Button } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import Select from "react-select";
+import { cityInfo } from "../../store/actions/searchActions";
 import "./CountrySelect.css";
 // import EuroIcon from "@mui/icons-material/Euro";
 // import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
@@ -15,9 +17,10 @@ const CitySelect = () => {
     { value: "Berlin", label: "Berlin" },
   ];
   const [formValue, setformValue] = React.useState("USA");
-
+  const dispatch = useDispatch();
   const handleChange = (event) => {
     setformValue(event.value);
+    dispatch(cityInfo(event.value));
   };
 
   // const handleCallback = () => {

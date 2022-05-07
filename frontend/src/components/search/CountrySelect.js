@@ -1,6 +1,8 @@
 import React from "react";
 import { Form, Button } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import Select from "react-select";
+import { countryInfo } from "../../store/actions/searchActions";
 import "./CountrySelect.css";
 // import EuroIcon from "@mui/icons-material/Euro";
 // import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
@@ -14,9 +16,10 @@ const CountrySelect = () => {
     { value: "Germany", label: "Germany" },
   ];
   const [formValue, setformValue] = React.useState("USA");
-
+  const dispatch = useDispatch();
   const handleChange = (event) => {
     setformValue(event.value);
+    dispatch(countryInfo(event.value));
   };
 
   // const handleCallback = () => {
@@ -42,7 +45,6 @@ const CountrySelect = () => {
           options={options}
           onChange={handleChange}
           styles={customStyles}
-         
         />
       </Form.Group>
       {/* <div style={{ float: "right" }}>
