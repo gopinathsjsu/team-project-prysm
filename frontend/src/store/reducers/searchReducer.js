@@ -5,9 +5,11 @@ import {
   TO_DATE,
   COUNTRY_INFO,
   CITY_INFO,
+  GUESTS,
+  ROOMS,
 } from "../actions/action-types/search-actions";
 
-const initialState = {};
+const initialState = { GUESTS: 1, ROOMS: 1, COUNTRY_INFO: "", CITY_INFO : ""};
 
 const searchReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -22,6 +24,12 @@ const searchReducer = (state = initialState, action) => {
       return state;
     case TO_DATE:
       state.TO_DATE = action.payload;
+      return state;
+    case GUESTS:
+      state.GUESTS = action.payload;
+      return state;
+    case ROOMS:
+      state.ROOMS = action.payload;
       return state;
 
     default:

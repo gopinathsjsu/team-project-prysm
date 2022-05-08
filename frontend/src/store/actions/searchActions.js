@@ -3,6 +3,8 @@ import {
   TO_DATE,
   COUNTRY_INFO,
   CITY_INFO,
+  ROOMS,
+  GUESTS,
 } from "./action-types/search-actions";
 
 
@@ -29,6 +31,19 @@ export function countryInfo(values) {
 export function cityInfo(values) {
   return {
     type: CITY_INFO,
+    payload: values,
+  };
+}
+export function fromGuests(values) {
+  return {
+    type: GUESTS,
+    payload: values,
+  };
+}
+
+export function fromRooms(values) {
+  return {
+    type: ROOMS,
     payload: values,
   };
 }

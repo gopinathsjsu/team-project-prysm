@@ -5,7 +5,12 @@ import { Button } from "react-bootstrap";
 import "./DatePicker.css";
 //
 import "react-datepicker/dist/react-datepicker.css";
-import { fromDate, toDate } from "../../store/actions/searchActions";
+import {
+  fromDate,
+  fromGuests,
+  fromRooms,
+  toDate,
+} from "../../store/actions/searchActions";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { backend } from "../config";
@@ -17,7 +22,8 @@ function FromDatePicker() {
   const [numOfRooms, setnumOfRooms] = useState(1);
   const dispatch = useDispatch();
   const { searchReducer } = useSelector((state) => state);
-
+  dispatch(fromGuests(numOfGuests));
+  dispatch(fromRooms(numOfRooms));
   const searchReduxData = searchReducer.searchReducer;
 
   const handleCheckInDate = (date) => {
@@ -27,39 +33,41 @@ function FromDatePicker() {
   };
   const handleGuests = (value) => {
     setnumOfGuests(value);
+    dispatch(fromGuests(value));
   };
   const handleRooms = (value) => {
     setnumOfRooms(value);
+    dispatch(fromRooms(value));
   };
   const handleCheckOutDate = (date) => {
     setCheckOutDate(date);
     dispatch(toDate(date));
   };
-  const handleOnClick = async () => {
-    if (
-      searchReduxData.COUNTRY_INFO &&
-      searchReduxData.CITY_INFO &&
-      searchReduxData.FROM_DATE &&
-      searchReduxData.TO_DATE
-    ) {
-      if (searchReduxData.TO_DATE >= searchReduxData.FROM_DATE) {
-        var data = {
-          country: searchReduxData.COUNTRY_INFO,
-          city: searchReduxData.CITY_INFO,
-          fromDate: searchReduxData.FROM_DATE.toISOString().substring(0, 10),
-          toDate: searchReduxData.TO_DATE.toISOString().substring(0, 10),
-          numOfRooms: numOfRooms,
-          numOfGuests: numOfGuests,
-        };
-        try {
-          const response = await axios.post(`${backend}/fetchHotels`, data);
-          console.log(response, "response");
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    }
-  };
+  // const handleOnClick = async () => {
+  //   if (
+  //     searchReduxData.COUNTRY_INFO &&
+  //     searchReduxData.CITY_INFO &&
+  //     searchReduxData.FROM_DATE &&
+  //     searchReduxData.TO_DATE
+  //   ) {
+  //     if (searchReduxData.TO_DATE >= searchReduxData.FROM_DATE) {
+  //       var data = {
+  //         country: searchReduxData.COUNTRY_INFO,
+  //         city: searchReduxData.CITY_INFO,
+  //         fromDate: searchReduxData.FROM_DATE.toISOString().substring(0, 10),
+  //         toDate: searchReduxData.TO_DATE.toISOString().substring(0, 10),
+  //         numOfRooms: numOfRooms,
+  //         numOfGuests: numOfGuests,
+  //       };
+  //       try {
+  //         const response = await axios.post(`${backend}/fetchHotels`, data);
+  //         console.log(response, "response");
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     }
+  //   }
+  // };
   return (
     <div className="App">
       <div className="input-container">
@@ -83,7 +91,7 @@ function FromDatePicker() {
           <label className="top">Guests</label>
           <NumericInput
             min={1}
-            placeholder="1"
+            value={numOfGuests}
             className="form-control"
             onChange={handleGuests}
           />
@@ -93,17 +101,12 @@ function FromDatePicker() {
           <label className="top">Rooms</label>
           <NumericInput
             min={1}
-            placeholder="1"
+            value={numOfRooms}
             className="form-control"
             onChange={handleRooms}
           />
         </div>
         &nbsp; &nbsp;
-        <div className="align">
-          <Button variant="outline-primary" onClick={handleOnClick}>
-            Search Hotels
-          </Button>
-        </div>
       </div>
     </div>
   );
