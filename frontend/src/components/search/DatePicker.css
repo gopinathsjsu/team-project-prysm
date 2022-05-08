@@ -1,5 +1,3 @@
-
-
 .input-container {
   display: flex;
   flex-direction: row;
@@ -8,16 +6,26 @@
 }
 
 .input-container .react-datepicker-wrapper {
-  margin: 12px 0;
+  margin: 4px 0;
   width: 100%;
 }
 
 .input-container .react-datepicker-wrapper input {
-  padding: 4px 12px;
+  padding: 11px 5px;
 }
 .align {
   display: flex;
   justify-content: center;
- 
 }
-
+.form-control {
+  padding: 11px 5px;
+}
+.inputWrapper label {
+  display: block;
+  margin: 4px 0;
+  width: 100%;
+}
+.top {
+  margin: 4px 0;
+  width: 100%;
+}

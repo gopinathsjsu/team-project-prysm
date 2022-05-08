@@ -3,13 +3,12 @@ import { React } from "react";
 import "../styles/Header.css";
 import {
   Container,
-  Form,
-  FormControl,
+ 
   Nav,
   Navbar,
   NavDropdown,
-  Offcanvas,
-  Button,
+
+
 } from "react-bootstrap";
 import LoginButton from "./login/loginModal";
 import SignUpButton from "./signup/SignUpModal";

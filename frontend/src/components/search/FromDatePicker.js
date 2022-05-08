@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
-
+import NumericInput from "react-numeric-input";
 import { Button } from "react-bootstrap";
 import "./DatePicker.css";
 //
@@ -13,17 +13,24 @@ import { backend } from "../config";
 function FromDatePicker() {
   const [checkInDate, setCheckInDate] = useState(null);
   const [checkOutDate, setCheckOutDate] = useState(null);
+  const [numOfGuests, setnumOfGuests] = useState(1);
+  const [numOfRooms, setnumOfRooms] = useState(1);
   const dispatch = useDispatch();
   const { searchReducer } = useSelector((state) => state);
-  console.log(searchReducer, "aa");
+
   const searchReduxData = searchReducer.searchReducer;
-  console.log(searchReduxData.FROM_DATE.toISOString().substring(0, 10), "aaa");
+
   const handleCheckInDate = (date) => {
     setCheckInDate(date);
     setCheckOutDate(null);
     dispatch(fromDate(date));
   };
-
+  const handleGuests = (value) => {
+    setnumOfGuests(value);
+  };
+  const handleRooms = (value) => {
+    setnumOfRooms(value);
+  };
   const handleCheckOutDate = (date) => {
     setCheckOutDate(date);
     dispatch(toDate(date));
@@ -41,8 +48,8 @@ function FromDatePicker() {
           city: searchReduxData.CITY_INFO,
           fromDate: searchReduxData.FROM_DATE.toISOString().substring(0, 10),
           toDate: searchReduxData.TO_DATE.toISOString().substring(0, 10),
-          numOfRooms: "2",
-          numOfGuests: "2",
+          numOfRooms: numOfRooms,
+          numOfGuests: numOfGuests,
         };
         try {
           const response = await axios.post(`${backend}/fetchHotels`, data);
@@ -72,13 +79,31 @@ function FromDatePicker() {
             onChange={handleCheckOutDate}
           />
         </div>
-      </div>
-      <br />
-      <br />
-      <div className="align">
-        <Button variant="outline-primary" onClick={handleOnClick}>
-          Search Hotels
-        </Button>
+        <div className="inputWrapper">
+          <label className="top">Guests</label>
+          <NumericInput
+            min={1}
+            placeholder="1"
+            className="form-control"
+            onChange={handleGuests}
+          />
+        </div>
+        &nbsp; &nbsp;
+        <div className="inputWrapper">
+          <label className="top">Rooms</label>
+          <NumericInput
+            min={1}
+            placeholder="1"
+            className="form-control"
+            onChange={handleRooms}
+          />
+        </div>
+        &nbsp; &nbsp;
+        <div className="align">
+          <Button variant="outline-primary" onClick={handleOnClick}>
+            Search Hotels
+          </Button>
+        </div>
       </div>
     </div>
   );
