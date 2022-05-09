@@ -1,15 +1,14 @@
 package com.cmpe202.prysm.controller;
 
 import com.cmpe202.prysm.dao.HotelBookingDao;
+import com.cmpe202.prysm.model.Booking;
 import com.cmpe202.prysm.model.Customer;
 import com.cmpe202.prysm.model.Hotel;
+import com.cmpe202.prysm.model.Room;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 
@@ -58,9 +57,18 @@ public class HotelBookingController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Hotel> fetchHotels(@RequestBody Hotel hotel) throws SQLException {
         //check if all the required information is provided by the user and register User
-        return hotelBookingDao.fetchHotels(hotel.getCity(),hotel.getCountry(),hotel.getFromDate(),hotel.getToDate(),hotel.getNumOfRooms(),hotel.getNumOfGuests());
+        return hotelBookingDao.fetchHotels(hotel.getCity(),hotel.getCountry(),hotel.getFromDate(),
+                hotel.getToDate(),hotel.getNumOfRooms(),hotel.getNumOfGuests());
 
     }
+
+    //Search for Rooms in Hotel
+    @GetMapping(path = "viewRooms/",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Room> fetchRooms(@RequestParam String hotel_id) throws SQLException {
+        return hotelBookingDao.fetchRooms(hotel_id);
+    }
+
 
     //Book one or more rooms for stay up to 1 week
     /*
@@ -71,6 +79,11 @@ public class HotelBookingController {
         Daily Parking
         All meals included (Breakfast, Lunch, Dinner)
      */
+//    @GetMapping(path = "bookHotel",
+//                produces = MediaType.APPLICATION_JSON_VALUE)
+//    public boolean bookHotel(@RequestBody Booking booking) {
+//        return hotelBookingDao.bookHotel(booking);
+//    }
 
 
 

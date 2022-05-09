@@ -1,6 +1,9 @@
 package com.cmpe202.prysm.dao;
 
+import com.cmpe202.prysm.model.Amenities;
+import com.cmpe202.prysm.model.Booking;
 import com.cmpe202.prysm.model.Hotel;
+import com.cmpe202.prysm.model.Room;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -8,7 +11,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class HotelBookingDao {
@@ -20,8 +22,12 @@ public class HotelBookingDao {
 
     Logger logger = LoggerFactory.getLogger(HotelBookingDao.class);
 
+    private static List<Hotel> availableHotelsList = new ArrayList<>();
+
     public HotelBookingDao() throws SQLException {
     }
+
+
     public Boolean loginUser (String username, String password) throws SQLException {
         String sql = "select * from employee where employee_id=? and password=?";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
@@ -50,43 +56,30 @@ public class HotelBookingDao {
         }
         return false;
     }
+
+
     public List<Hotel> fetchHotels(String city, String country, String fromDate,
                                    String toDate,  Integer numOfRooms,
                                    Integer guestCount) throws SQLException {
 
-//        String sql = "select hotel_id, hotel_name, country, city from hotel where country=?, city=?";
-//        logger.info(country);
-//        logger.info(city);
-//        logger.info(String.valueOf(fromDate));
-//        logger.info(String.valueOf(toDate));
-//        logger.info(String.valueOf(numOfRooms));
-//        logger.info(String.valueOf(guestCount));
-        String sql1 = "select H.hotel_id, count(*) from hotel H join room R on H.hotel_id = R.hotel_id where H.city=? and H.country=? group by H.hotel_id having count(*)>= ?;";
+        String sql1 = "select H.hotel_id, count(*) from hotel H join room R on H.hotel_id = R.hotel_id where " +
+                      "H.city=? and H.country=? group by H.hotel_id having count(*)>= ?;";
 
         PreparedStatement preparedStatement=connection.prepareStatement(sql1);
-//        logger.info("connection established");
         preparedStatement.setString(1,city);
         preparedStatement.setString(2,country);
         preparedStatement.setInt(3,numOfRooms);
         ResultSet resultSet= preparedStatement.executeQuery();
-//        logger.info("Blank",String.valueOf(resultSet));
         HashMap<String,Integer> hotelCountMap = new HashMap<String, Integer>();
         while(resultSet.next()){
-//            logger.info("inside while");
-//            logger.info(String.valueOf(resultSet.getRow()));
-
             hotelCountMap.put(resultSet.getString(1),resultSet.getInt(2));
         }
-//        for(Map.Entry<String,Integer>entry:HashMap.entrySet()){
-//            String key=hotelCount.getKey();
-//            Integer value=hotelCount.getValue();
-//        }
-//        logger.info("test values {}", hotelCountMap);
         List<String> hotelIds=new ArrayList<>();
         for(String hotelId : hotelCountMap.keySet()){
             int value = hotelCountMap.get(hotelId);
             if(value>=numOfRooms){
-                String sql2="select count(*) from booking B where hotel_id=? and (? between B.from_date and B.to_date) or (? between B.from_date and B.to_date) group by ?;";
+                String sql2="select count(*) from booking B where hotel_id=? and (? between B.from_date and B.to_date) or " +
+                            "(? between B.from_date and B.to_date) group by ?;";
                 PreparedStatement preparedStatement2=connection.prepareStatement(sql2);
                 preparedStatement2.setString(1,hotelId);
                 preparedStatement2.setString(2,fromDate);
@@ -100,15 +93,12 @@ public class HotelBookingDao {
                 }
             }
         }
-//        logger.info("test list {}", hotelIds);
-
         List<Hotel> validHotels=new ArrayList<>();
         for(String hotelId2:hotelIds){
             String sql3="select * from hotel where hotel_id=?";
             PreparedStatement preparedStatement3=connection.prepareStatement(sql3);
             preparedStatement3.setString(1,hotelId2);
             ResultSet resultSet3=preparedStatement3.executeQuery();
-
 
             while(resultSet3.next()){
                 Hotel hotel=new Hotel();
@@ -129,10 +119,43 @@ public class HotelBookingDao {
                 validHotels.add(hotel);
 
             }
-
-
         }
-
+        availableHotelsList.addAll(validHotels);
         return validHotels;
     }
+
+
+
+    public boolean bookHotel(Booking booking) {
+
+        boolean hotelBooked = false;
+        String hotelBookingQuery = "Select ";
+        return hotelBooked;
+
+    }
+
+    public List<Room> fetchRooms(String hotelId) throws SQLException {
+
+        List<Room> availableRooms = new ArrayList<>();
+        String fetchRoomsQuery = "Select * from room R join Hotel H on R.hotel_id = H.hotel_id where H.hotel_id = ?";
+
+        for(Hotel hotel : availableHotelsList) {
+            logger.info("hotel Id "+hotelId +" and existing hotelId "+hotel.getHotel_id());
+            if(hotel.getHotel_id().trim().equals(hotelId.trim())) {
+                logger.info(hotel.getHotel_id() + " , "+hotel.getHotel_name());
+                PreparedStatement preparedStatement = connection.prepareStatement(fetchRoomsQuery);
+                preparedStatement.setString(1, hotelId);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    Amenities amenities = new Amenities(resultSet.getBoolean(9), resultSet.getBoolean(10),
+                            resultSet.getBoolean(11), resultSet.getBoolean(12), resultSet.getBoolean(13), resultSet.getBoolean(13));
+                    Room room = new Room(amenities, resultSet.getString(1), resultSet.getString(3), resultSet.getInt(4), resultSet.getString(2));
+                    availableRooms.add(room);
+                }
+            }
+        }
+
+        return availableRooms;
+    }
+
 }
