@@ -8,7 +8,9 @@ import {
   Row,
   Col,
   Button,
+  Modal,
 } from "react-bootstrap";
+import roomImage from "./Room1.jpg";
 
 import CountrySelect from "./search/CountrySelect";
 import CitySelect from "./search/CitySelect";
@@ -22,20 +24,24 @@ import DoneIcon from "@mui/icons-material/Done";
 
 function Home() {
   const [hotelData, sethotelData] = useState([]);
+  const [RoomData, setRoomData] = useState([]);
   const [flag, setFlag] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const { searchReducer } = useSelector((state) => state);
+  const [flagRooms, setflagRooms] = useState(false);
   const styles = {
     card: {
       backgroundColor: "White",
       borderRadius: 55,
-      padding: "3rem",
+      padding: "2rem",
     },
     cardImage: {
       height: "100%",
       objectFit: "cover",
-      borderRadius: 55,
+      borderRadius: 15,
     },
   };
+  const handleCloseModal = () => setShowModal(false);
 
   const searchReduxData = searchReducer.searchReducer;
   const handleOnClick = async () => {
@@ -67,6 +73,67 @@ function Home() {
       }
     }
   };
+
+  const fetchRooms = async (hotelID) => {
+    try {
+      const response = await axios.get(`${backend}/viewRooms/`, {
+        params: { hotel_id: hotelID },
+      });
+      setRoomData(response.data);
+      setflagRooms(true);
+      setShowModal(true);
+
+      console.log(response.data.map((element) => element) + "fetchRooms");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  let responseRoomData;
+  if (RoomData && flagRooms) {
+    responseRoomData = React.Children.toArray(
+      RoomData.map((room) => (
+        <Container fluid className="text-center">
+          <CardGroup className="m-9 d-block">
+            <Card className="m-5 border-0 shadow" style={styles.card}>
+              <Row>
+                <Col>
+                  <Card.Img src={roomImage} style={styles.cardImage} />
+                </Col>
+                <Col>
+                  {/* <Card.Header as="h3"></Card.Header> */}
+                  <Card.Body>
+                    <Card.Title as="h3"></Card.Title>
+                    <Table>
+                      <tbody>
+                        <tr>
+                          <td>{room.room_type + " "} Room</td>
+                          <td>{room.price} </td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </Card.Body>
+
+                  <Button variant="outline-dark">Book Room</Button>
+                </Col>
+              </Row>
+            </Card>
+          </CardGroup>
+        </Container>
+      ))
+    );
+  }
+
   let responseData;
   if (hotelData && flag) {
     responseData = React.Children.toArray(
@@ -86,7 +153,7 @@ function Home() {
                   <Card.Header as="h3">{hotel.hotel_name}</Card.Header>
                   <Card.Body>
                     <Card.Title as="h3"></Card.Title>
-                    <Table >
+                    <Table>
                       <tbody>
                         <tr>
                           <td>{hotel.city}</td>
@@ -129,7 +196,12 @@ function Home() {
                     </Table>
                   </Card.Body>
 
-                  <Button variant="outline-dark">View Rooms</Button>
+                  <Button
+                    variant="outline-dark"
+                    onClick={() => fetchRooms(hotel.hotel_id)}
+                  >
+                    View Rooms
+                  </Button>
                 </Col>
               </Row>
             </Card>
@@ -158,6 +230,14 @@ function Home() {
       </Card>
 
       {responseData}
+      <Modal centered size="lg" show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title aria-labelledby="contained-modal-title-vcenter" centered>
+            Room Selection
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{responseRoomData}</Modal.Body>
+      </Modal>
     </>
   );
 }
