@@ -3,6 +3,7 @@ import { USER_LOGOUT } from "../actions/action-types/user-actions";
 import userReducer from "./userReducer";
 import roomReducer from "./roomReducer";
 import searchReducer from "./searchReducer";
+import roomPriceReducer from "./roomPriceReducer";
 
 import storage from "redux-persist/lib/storage";
 
@@ -10,6 +11,7 @@ const rootReducer = combineReducers({
   userReducer,
   roomReducer,
   searchReducer,
+  roomPriceReducer,
 });
 
 const allReducers = (state, action) => {

@@ -9,6 +9,7 @@ import {
   Col,
   Button,
   Modal,
+  Form,
 } from "react-bootstrap";
 import roomImage from "./Room1.jpg";
 
@@ -16,19 +17,30 @@ import CountrySelect from "./search/CountrySelect";
 import CitySelect from "./search/CitySelect";
 import "./Home.css";
 import FromDate from "./search/FromDatePicker";
-import { useSelector } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import axios from "axios";
 import { backend } from "./config";
 import ClearIcon from "@mui/icons-material/Clear";
 import DoneIcon from "@mui/icons-material/Done";
+import { fromPrices, initPrices } from "../store/actions/roomPriceActions";
 
-function Home() {
+function Home(props) {
   const [hotelData, sethotelData] = useState([]);
   const [RoomData, setRoomData] = useState([]);
   const [flag, setFlag] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { searchReducer } = useSelector((state) => state);
   const [flagRooms, setflagRooms] = useState(false);
+  const [amenities, setAmenities] = useState({
+    AllMeals: false,
+    Breakfast: false,
+    Jacuzzi: false,
+    DailyParking: false,
+    SwimmingPool: false,
+    FitnessRoom: false,
+  });
+  const { roomPriceReducer } = useSelector((state) => state);
+  const [totalPrice, setTotalPrice] = useState(0);
   const styles = {
     card: {
       backgroundColor: "White",
@@ -44,6 +56,33 @@ function Home() {
   const handleCloseModal = () => setShowModal(false);
 
   const searchReduxData = searchReducer.searchReducer;
+  const roompriceRedux = roomPriceReducer.roomPriceReducer;
+  const handleCheck = (e) => {
+    setAmenities({
+      ...amenities,
+      [e.target.name]: e.target.checked,
+    });
+    var check = {
+      roomType: e.target.name,
+      amenityBool: e.target.checked,
+    };
+    props.fromPrices(check);
+  };
+  const handleSelectRoom = (e) => {
+    if (e.target.name === "single" && e.target.checked) {
+      setTotalPrice(totalPrice + roompriceRedux.SINGLE_BEDROOM);
+    } else if (e.target.name === "double" && e.target.checked) {
+      setTotalPrice(totalPrice + roompriceRedux.DOUBLE_BEDROOM);
+    } else if (e.target.name === "suite" && e.target.checked) {
+      setTotalPrice(totalPrice + roompriceRedux.SUITE_BEDROOM);
+    } else if (e.target.name === "single" && !e.target.checked) {
+      setTotalPrice(totalPrice - roompriceRedux.SINGLE_BEDROOM);
+    } else if (e.target.name === "double" && !e.target.checked) {
+      setTotalPrice(totalPrice - roompriceRedux.DOUBLE_BEDROOM);
+    } else if (e.target.name === "suite" && !e.target.checked) {
+      setTotalPrice(totalPrice - roompriceRedux.SUITE_BEDROOM);
+    }
+  };
   const handleOnClick = async () => {
     if (
       searchReduxData.COUNTRY_INFO &&
@@ -64,6 +103,7 @@ function Home() {
         };
         try {
           const response = await axios.post(`${backend}/fetchHotels`, data);
+
           sethotelData(response.data);
           setFlag(true);
           console.log(response);
@@ -79,11 +119,22 @@ function Home() {
       const response = await axios.get(`${backend}/viewRooms/`, {
         params: { hotel_id: hotelID },
       });
+      var temp = {};
+      response.data.map(function (room) {
+        if (room.room_type === "single") {
+          temp["single"] = room.price;
+        } else if (room.room_type === "double") {
+          temp["double"] = room.price;
+        } else if (room.room_type === "suite") {
+          temp["suite"] = room.price;
+        }
+        console.log(temp.single);
+      });
+      props.initPrices(temp);
       setRoomData(response.data);
       setflagRooms(true);
       setShowModal(true);
-
-      console.log(response.data.map((element) => element) + "fetchRooms");
+      console.log(JSON.stringify(response));
     } catch (error) {
       console.log(error);
     }
@@ -107,24 +158,97 @@ function Home() {
                       <tbody>
                         <tr>
                           <td>{room.room_type + " "} Room</td>
-                          <td>{room.price} </td>
+                          {room.room_type === "single" ? (
+                            <td>{roompriceRedux.SINGLE_BEDROOM} </td>
+                          ) : room.room_type === "double" ? (
+                            <td>{roompriceRedux.DOUBLE_BEDROOM} </td>
+                          ) : (
+                            <td>{roompriceRedux.SUITE_BEDROOM} </td>
+                          )}
                           <td></td>
                         </tr>
                         <tr>
-                          <td></td>
-                          <td></td>
-                          <td></td>
+                          <td>
+                            <Form>
+                              <Form.Check
+                                type="checkbox"
+                                // id={`default-${type}`}
+                                label="Breakfast"
+                                name={`Breakfast-${room.room_type}`}
+                                onChange={handleCheck}
+                              />
+                            </Form>
+                          </td>
+                          <td>
+                            <Form>
+                              <Form.Check
+                                type="checkbox"
+                                // id={`default-${type}`}
+                                label="All Meals"
+                                name={`AllMeals-${room.room_type}`}
+                                onChange={handleCheck}
+                              />
+                            </Form>
+                          </td>
+                          <td>
+                            <Form>
+                              <Form.Check
+                                type="checkbox"
+                                // id={`default-${type}`}
+                                label="Jacuzzi"
+                                name={`Jacuzzi-${room.room_type}`}
+                                onChange={handleCheck}
+                              />
+                            </Form>
+                          </td>
                         </tr>
                         <tr>
-                          <td></td>
-                          <td></td>
-                          <td></td>
+                          <td>
+                            <Form>
+                              <Form.Check
+                                type="checkbox"
+                                // id={`default-${type}`}
+                                label="Daily Parking"
+                                name={`DailyParking-${room.room_type}`}
+                                onChange={handleCheck}
+                              />
+                            </Form>
+                          </td>
+                          <td>
+                            <Form>
+                              <Form.Check
+                                type="checkbox"
+                                // id={`default-${type}`}
+                                label="Swimming Pool"
+                                name={`SwimmingPool-${room.room_type}`}
+                                onChange={handleCheck}
+                              />
+                            </Form>
+                          </td>
+                          <td>
+                            <Form>
+                              <Form.Check
+                                type="checkbox"
+                                // id={`default-${type}`}
+                                label="Fitness Room"
+                                name={`FitnessRoom-${room.room_type}`}
+                                onChange={handleCheck}
+                              />
+                            </Form>
+                          </td>
                         </tr>
                       </tbody>
                     </Table>
+                    <Form>
+                      <Form.Check
+                        type="checkbox"
+                        // id={`default-${type}`}
+                        label="Select Room"
+                        name={room.room_type}
+                        onChange={handleSelectRoom}
+                      />
+                    </Form>
                   </Card.Body>
-
-                  <Button variant="outline-dark">Book Room</Button>
                 </Col>
               </Row>
             </Card>
@@ -230,16 +354,24 @@ function Home() {
       </Card>
 
       {responseData}
-      <Modal centered size="lg" show={showModal} onHide={handleCloseModal}>
+      <Modal size="lg" show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title aria-labelledby="contained-modal-title-vcenter" centered>
-            Room Selection
+            Room Selection{" "}
+            <span style={{ textAlign: "right" }}>
+              Total Price : {totalPrice}{" "}
+            </span>
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>{responseRoomData}</Modal.Body>
+        <Modal.Body>
+          {responseRoomData}
+          <Button variant="outline-dark" size="md">
+            Book Room
+          </Button>
+        </Modal.Body>
       </Modal>
     </>
   );
 }
 
-export default Home;
+export default connect(null, { fromPrices, initPrices })(Home);
