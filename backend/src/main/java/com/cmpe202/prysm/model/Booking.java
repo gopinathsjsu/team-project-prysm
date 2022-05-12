@@ -10,7 +10,17 @@ public class Booking {
     private String from_date;
     private String to_date;
 
-    public Booking(String room_type, String hotel_id, String country, String city, String customer_id, String from_date, String to_date) {
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    private int price;
+
+    public Booking(String room_type, String hotel_id, String country, String city, String customer_id, String from_date, String to_date, int price) {
         this.room_type = room_type;
         this.hotel_id = hotel_id;
         this.country = country;
@@ -18,6 +28,7 @@ public class Booking {
         this.customer_id = customer_id;
         this.from_date = from_date;
         this.to_date = to_date;
+        this.price = price;
     }
 
     public String getRoom_type() {
@@ -75,4 +86,7 @@ public class Booking {
     public void setTo_date(String to_date) {
         this.to_date = to_date;
     }
+
+
+
 }
