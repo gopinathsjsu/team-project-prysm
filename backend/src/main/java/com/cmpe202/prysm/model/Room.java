@@ -3,15 +3,15 @@ package com.cmpe202.prysm.model;
 public class Room {
 
     private Amenities amenities;
-    private String room_id;
     private String room_type;
+    private int count_of_rooms;
     private int price;
     private String hotel_id;
 
-    public Room(Amenities amenities, String room_id, String room_type, int price, String hotel_id) {
+    public Room(Amenities amenities, String room_type, int count_of_rooms, int price, String hotel_id) {
         this.amenities = amenities;
-        this.room_id = room_id;
         this.room_type = room_type;
+        this.count_of_rooms = count_of_rooms;
         this.price = price;
         this.hotel_id = hotel_id;
     }
@@ -24,20 +24,20 @@ public class Room {
         this.amenities = amenities;
     }
 
-    public String getRoom_id() {
-        return room_id;
-    }
-
-    public void setRoom_id(String room_id) {
-        this.room_id = room_id;
-    }
-
     public String getRoom_type() {
         return room_type;
     }
 
     public void setRoom_type(String room_type) {
         this.room_type = room_type;
+    }
+
+    public int getCount_of_rooms() {
+        return count_of_rooms;
+    }
+
+    public void setCount_of_rooms(int count_of_rooms) {
+        this.count_of_rooms = count_of_rooms;
     }
 
     public int getPrice() {

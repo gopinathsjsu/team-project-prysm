@@ -63,11 +63,13 @@ public class HotelBookingController {
     }
 
     //Search for Rooms in Hotel
-    @GetMapping(path = "viewRooms/",
+    @GetMapping(path = "fetchRooms/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Room> fetchRooms(@RequestParam String hotel_id) throws SQLException {
         return hotelBookingDao.fetchRooms(hotel_id);
     }
+
+
 
 
     //Book one or more rooms for stay up to 1 week
