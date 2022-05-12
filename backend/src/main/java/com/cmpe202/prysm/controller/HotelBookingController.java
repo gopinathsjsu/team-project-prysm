@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 @RestController
-//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 public class HotelBookingController {
 
     Logger logger = LoggerFactory.getLogger(HotelBookingController.class);

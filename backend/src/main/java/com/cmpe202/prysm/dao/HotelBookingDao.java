@@ -91,6 +91,7 @@ public class HotelBookingDao {
                 validHotels.add(hotel);
             }
         }
+        availableHotelsList.clear();
         availableHotelsList.addAll(validHotels);
         return validHotels;
     }
@@ -146,6 +147,7 @@ public class HotelBookingDao {
             preparedStatement.setString(1, bookingId);
 
             resultSet = preparedStatement.executeQuery();
+            occupiedRooms.clear();
             while (resultSet.next()) {
                 occupiedRooms.put(resultSet.getString(1), resultSet.getInt(2));
             }
