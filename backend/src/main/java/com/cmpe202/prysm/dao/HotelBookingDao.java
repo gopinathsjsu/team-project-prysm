@@ -162,16 +162,25 @@ public class HotelBookingDao {
         for(Hotel hotel : availableHotelsList) {
             logger.info("hotel Id "+hotelId +" and existing hotelId "+hotel.getHotel_id());
             if(hotel.getHotel_id().trim().equals(hotelId.trim())) {
-                logger.info(hotel.getHotel_id() + " , "+hotel.getHotel_name());
-                PreparedStatement preparedStatement = connection.prepareStatement(fetchRoomsQuery);
+                Map<String, Integer> totalAvailableRoomsMap = new HashMap<>();
+
+                String queryForAvailableRoomTypes = "Select room_type, count_of_rooms from room where hotel_id = ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(queryForAvailableRoomTypes);
                 preparedStatement.setString(1, hotelId);
+
                 ResultSet resultSet = preparedStatement.executeQuery();
+                while(resultSet.next()) {
+                    totalAvailableRoomsMap.put(resultSet.getString(1), resultSet.getInt(2));
+                }
+
+                preparedStatement = connection.prepareStatement(fetchRoomsQuery);
+                preparedStatement.setString(1, hotelId);
+                resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     Amenities amenities = new Amenities(resultSet.getBoolean(9), resultSet.getBoolean(10),
                             resultSet.getBoolean(11), resultSet.getBoolean(12), resultSet.getBoolean(13), resultSet.getBoolean(13));
                     String roomType = resultSet.getString(1);
-//                    String totalRoomQuery = ""
-                    int availableRooms = 5 - occupiedRooms.getOrDefault(roomType, 0);
+                    int availableRooms = totalAvailableRoomsMap.getOrDefault(roomType, 0) - occupiedRooms.getOrDefault(roomType, 0);
                     Room room = new Room(amenities, roomType, availableRooms, resultSet.getInt(4), resultSet.getString(2));
                     availableRoomsList.add(room);
                 }
