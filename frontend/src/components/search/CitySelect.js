@@ -16,7 +16,7 @@ const CitySelect = () => {
     { value: "London", label: "London" },
     { value: "Berlin", label: "Berlin" },
   ];
-  const [formValue, setformValue] = React.useState("USA");
+  const [formValue, setformValue] = React.useState("San Jose");
   const dispatch = useDispatch();
   const handleChange = (event) => {
     setformValue(event.value);

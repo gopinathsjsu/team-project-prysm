@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../styles/Header.css";
-import {useSelector} from 'react-redux'
+import { useSelector } from "react-redux";
 import {
   Table,
   Container,
@@ -23,7 +23,7 @@ import CitySelect from "./search/CitySelect";
 import "./Home.css";
 import FromDate from "./search/FromDatePicker";
 import { pink } from "@mui/material/colors";
-import { connect, useSelector } from "react-redux";
+import { connect } from "react-redux";
 import axios from "axios";
 import { backend } from "./config";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -36,16 +36,14 @@ import {
   resetPrice,
 } from "../store/actions/roomPriceActions";
 
-
 import AdminPage from "./login/AdminPage";
 
-function Home() {
-
+function Home(props) {
   const [hotelData, sethotelData] = useState([]);
   const [RoomData, setRoomData] = useState([]);
   const [flag, setFlag] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const { searchReducer} = useSelector((state) => state);
+  const { searchReducer } = useSelector((state) => state);
   const [flagRooms, setflagRooms] = useState(false);
   const [amenities, setAmenities] = useState({
     AllMeals: false,
@@ -57,7 +55,9 @@ function Home() {
   });
   const [showToast, setShowToast] = useState(false);
   const [showToastFailed, setShowToastFailed] = useState(false);
-  const { roomPriceReducer } = useSelector((state) => state);
+  const { roomPriceReducer, bookingPriceReducer } = useSelector(
+    (state) => state
+  );
   const [totalPrice, setTotalPrice] = useState(0);
   const [singleRoom, setSingleRoom] = useState(false);
   const [doubleRoom, setDoubleRoom] = useState(false);
@@ -522,10 +522,11 @@ function Home() {
           </Toast.Body>
         </Toast>
       </ToastContainer>
-    {localStorage.getItem("isEmployeeLoggedIn") === "true" &&
-      <Card className="m-5 border-0 shadow" style={styles.card}>
-         <AdminPage></AdminPage>
-      </Card>}
+      {localStorage.getItem("isEmployeeLoggedIn") === "true" && (
+        <Card className="m-5 border-0 shadow" style={styles.card}>
+          <AdminPage></AdminPage>
+        </Card>
+      )}
     </>
   );
 }
