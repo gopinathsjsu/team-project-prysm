@@ -14,6 +14,7 @@ import java.util.Map;
 
 @Repository
 public class HotelBookingDao {
+
     public final String dbUrl = "jdbc:mysql://127.0.0.1:3306/cmpe202project";
     public final String username = "root";
     public final String password = "password";
@@ -36,9 +37,8 @@ public class HotelBookingDao {
 
 
     public Boolean loginUser (String username, String password) throws SQLException {
-        String sql = "select * from customer where employee_id=? and password=?";
+        String sql = "select * from customer where customer_id = ? and password = ?";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
-        logger.info("connection established");
         preparedStatement.setString(1,username);
         preparedStatement.setString(2,password);
         ResultSet resultSet= preparedStatement.executeQuery();
@@ -50,7 +50,7 @@ public class HotelBookingDao {
         return false;
     }
     public boolean loginEmployee (String username, String password) throws SQLException {
-        String sql = "select * from employee where employee_id=? and password=?";
+        String sql = "select * from employee where employee_id = ? and password = ?";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
         preparedStatement.setString(1,username);
         preparedStatement.setString(2,password);
@@ -62,20 +62,18 @@ public class HotelBookingDao {
         return false;
     }
 
-    public double getUserRewards() {
+    public int getCustomerRewards() {
         return userRewards;
     }
 
     public Boolean registerUser (String username, String password, String name) throws SQLException {
         String sql = "insert into customer (customer_id,password,customer_name ) values (?,?,?)";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
-        logger.info("connection established");
         preparedStatement.setString(1,username);
         preparedStatement.setString(2,password);
         preparedStatement.setString(3,name);
         int row= preparedStatement.executeUpdate();
         if (row > 0){
-            logger.info("db updated");
             return true;
         }
         return false;
@@ -85,7 +83,6 @@ public class HotelBookingDao {
         List<Hotel> hotels = new ArrayList<>();
         String sql = "select * from hotel";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
-        logger.info("connection established");
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()){
             Hotel hotel = new Hotel();
@@ -107,7 +104,6 @@ public class HotelBookingDao {
         String sql = "insert into hotel (hotel_id,hotel_name,country,city,daily_continental_breakfast,fitness_room, Swimming_pool, jacuzzi, daily_parking, all_meals ) values (?,?,?,?,?,?,?,?,?,?)";
 
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
-        logger.info("connection established");
         preparedStatement.setString(1,hotel.getHotel_id());
         preparedStatement.setString(2,hotel.getHotel_name());
         preparedStatement.setString(3,hotel.getCountry());
@@ -120,7 +116,6 @@ public class HotelBookingDao {
         preparedStatement.setBoolean(10,hotel.isAll_meals());
         int row= preparedStatement.executeUpdate();
         if (row > 0){
-            logger.info("db updated");
             return true;
         }
         return false;
@@ -209,11 +204,9 @@ public class HotelBookingDao {
         while (resultSet.next()) {
             bookingIds.add(resultSet.getString(1));
         }
-        logger.info(bookingIds.toString());
         //use booking Id to fetch room types from roomsBooked
         occupiedRooms.clear();
         for(String bookingId : bookingIds) {
-            logger.info("booking Id " + bookingId);
             String queryToFetchOccupiedRoomTypes = "Select room_type, count_of_rooms from roomsBooked where booking_id = ? ";
             preparedStatement = connection.prepareStatement(queryToFetchOccupiedRoomTypes);
             preparedStatement.setString(1, bookingId);
@@ -226,25 +219,17 @@ public class HotelBookingDao {
             }
 
         }
-        logger.info(String.valueOf(occupiedRooms));
     }
 
 
     public List<Room> fetchRooms(String hotelId) throws SQLException {
-<<<<<<< Updated upstream
         loadOccupiedRoomData(FROM_DATE, TO_DATE, HOTEL_ID);
         List<Room> availableRoomsList = new ArrayList<>();
         String fetchRoomsQuery = "Select * from room R join Hotel H on R.hotel_id = H.hotel_id where H.hotel_id = ?";
-=======
 
         loadOccupiedRoomData(FROM_DATE, TO_DATE, HOTEL_ID);
 
-        List<Room> availableRoomsList = new ArrayList<>();
-        String fetchRoomsQuery = "Select * from room R join Hotel H on R.hotel_id = H.hotel_id where H.hotel_id = ?";
-
->>>>>>> Stashed changes
         for(Hotel hotel : availableHotelsList) {
-            logger.info("hotel Id "+hotelId +" and existing hotelId "+hotel.getHotel_id());
             if(hotel.getHotel_id().trim().equals(hotelId.trim())) {
                 Map<String, Integer> totalAvailableRoomsMap = new HashMap<>();
 
@@ -383,6 +368,8 @@ public class HotelBookingDao {
 
         preparedStatement.executeUpdate();
 
+        userRewards = customerRewards;
+
     }
 
     public boolean cancelReservation(String bookingId) {
@@ -397,7 +384,6 @@ public class HotelBookingDao {
             if (resultSet.next()) {
                 String reservationStartDateStr = resultSet.getString(1);
                 LocalDate reservationStartDate = LocalDate.parse(reservationStartDateStr);
-                logger.info("Current Date "+ currentDate + " and reservation date "+reservationStartDate +" is possible ? "+currentDate.isBefore(reservationStartDate));
                 if (currentDate.isAfter(reservationStartDate)) {
                     return false;
                 }
@@ -425,9 +411,6 @@ public class HotelBookingDao {
         }
         return true;
     }
-
-
-
 
 
 }
