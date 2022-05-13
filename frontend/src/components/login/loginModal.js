@@ -18,7 +18,6 @@ function LoginButton() {
     <>
       <div className="d-grid gap-2 rounded-circle">
         <Button variant="light"  onClick={handleShowLogin}>
-        
           Sign in
         </Button>
       </div>
@@ -40,7 +39,7 @@ function LoginButton() {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <LoginForm />
+          <LoginForm  handleCloseLogin = {handleCloseLogin} />
         </Modal.Body>
       </Modal>
 

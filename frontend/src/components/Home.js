@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/Header.css";
+import {useSelector} from 'react-redux'
 import {
   Table,
   Container,
@@ -35,12 +36,16 @@ import {
   resetPrice,
 } from "../store/actions/roomPriceActions";
 
-function Home(props) {
+
+import AdminPage from "./login/AdminPage";
+
+function Home() {
+
   const [hotelData, sethotelData] = useState([]);
   const [RoomData, setRoomData] = useState([]);
   const [flag, setFlag] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const { searchReducer, bookingPriceReducer } = useSelector((state) => state);
+  const { searchReducer} = useSelector((state) => state);
   const [flagRooms, setflagRooms] = useState(false);
   const [amenities, setAmenities] = useState({
     AllMeals: false,
@@ -517,6 +522,10 @@ function Home(props) {
           </Toast.Body>
         </Toast>
       </ToastContainer>
+    {localStorage.getItem("isEmployeeLoggedIn") === "true" &&
+      <Card className="m-5 border-0 shadow" style={styles.card}>
+         <AdminPage></AdminPage>
+      </Card>}
     </>
   );
 }

@@ -1,16 +1,19 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
+import AdminPage from "./components/login/AdminPage";
+import LoginForm from "./components/login/loginForm";
 import Navbar from "./components/Navbar";
 function App() {
+  
   return (
     <div className="App">
       <Navbar />
-      <BrowserRouter>
         <Routes>
-          <Route path="" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/login" element={<LoginForm />} />
         </Routes>
-      </BrowserRouter>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import searchReducer from "./searchReducer";
 import roomPriceReducer from "./roomPriceReducer";
 import bookingPriceReducer from "./bookingPriceReducer";
 
+import EmployeeReducer from "./EmployeeReducer";
 import storage from "redux-persist/lib/storage";
 
 const rootReducer = combineReducers({
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   searchReducer,
   roomPriceReducer,
   bookingPriceReducer,
+  EmployeeReducer
 });
 
 const allReducers = (state, action) => {

@@ -32,6 +32,17 @@ public class HotelBookingController {
         return "Fail";
     }
 
+    @PostMapping(path = "loginEmployee")
+    public String loginEmployee(@RequestBody Employee employee) throws SQLException {
+        //fetch from DB and check if employee exists
+        logger.info("here");
+        if(hotelBookingDao.loginEmployee(employee.getUsername(), employee.getPassword()))
+            return "Success";
+
+        return "Fail";
+    }
+
+    //createUser
     //Register User
     @PostMapping(path = "registerUser",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -59,6 +70,15 @@ public class HotelBookingController {
 
     }
 
+    @PostMapping(path = "addHotel",
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Boolean addHotel(@RequestBody Hotel hotel) throws SQLException {
+        //check if all the required information is provided by the user and register User
+        return hotelBookingDao.addHotel(hotel);
+    }
+
+
+
     //Search for Rooms in Hotel
     @GetMapping(path = "fetchRooms/",
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -72,6 +92,13 @@ public class HotelBookingController {
     public List<BookingInformation> fetchCustomerHistory(@RequestParam String customerId) throws SQLException{
         return hotelBookingDao.fetchCustomerHistory(customerId);
     }
+    @GetMapping(path = "/getHotels",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Hotel> getHotels() throws SQLException {
+        return hotelBookingDao.getHotels();
+    }
+
+
 
     //Book Rooms
     @PostMapping(path = "bookRooms",
