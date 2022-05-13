@@ -226,13 +226,23 @@ public class HotelBookingDao {
             }
 
         }
+        logger.info(String.valueOf(occupiedRooms));
     }
 
 
     public List<Room> fetchRooms(String hotelId) throws SQLException {
+<<<<<<< Updated upstream
         loadOccupiedRoomData(FROM_DATE, TO_DATE, HOTEL_ID);
         List<Room> availableRoomsList = new ArrayList<>();
         String fetchRoomsQuery = "Select * from room R join Hotel H on R.hotel_id = H.hotel_id where H.hotel_id = ?";
+=======
+
+        loadOccupiedRoomData(FROM_DATE, TO_DATE, HOTEL_ID);
+
+        List<Room> availableRoomsList = new ArrayList<>();
+        String fetchRoomsQuery = "Select * from room R join Hotel H on R.hotel_id = H.hotel_id where H.hotel_id = ?";
+
+>>>>>>> Stashed changes
         for(Hotel hotel : availableHotelsList) {
             logger.info("hotel Id "+hotelId +" and existing hotelId "+hotel.getHotel_id());
             if(hotel.getHotel_id().trim().equals(hotelId.trim())) {
@@ -300,8 +310,9 @@ public class HotelBookingDao {
             preparedStatement = connection.prepareStatement(queryToFetchBookingId);
 
             ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            bookingId = resultSet.getInt(1);
+            if(resultSet.next()) {
+                bookingId = resultSet.getInt(1);
+            }
 
             //write into roomsBooked table with room type booked
             String queryToInsertInRoomsBooked = "Insert into roomsBooked values (?, ? , ? , ? , ? , ? , ? , ?, ?) ";
@@ -319,7 +330,7 @@ public class HotelBookingDao {
                 preparedStatement.setInt(9, room.getCount_of_rooms());
 
                 preparedStatement.executeUpdate();
-                updateCustomerRewards(USER_NAME, totalPrice % 100);
+                updateCustomerRewards(USER_NAME, totalPrice / 10);
             }
         } catch (SQLException e) {
             return 0;
@@ -353,9 +364,21 @@ public class HotelBookingDao {
 
     private void updateCustomerRewards(String customerId, int rewards) throws SQLException {
 
+        String getCustomerRewardsQuery = "Select rewards from customer where customer_id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(getCustomerRewardsQuery);
+        preparedStatement.setString(1, customerId);
+        int customerRewards = 0;
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            customerRewards += resultSet.getInt(1);
+        }
+
+        customerRewards = Math.max(0, customerRewards + rewards);
+
         String updateCustomerRewardsQuery = "Update customer set rewards = ? where customer_id = ?";
-        PreparedStatement preparedStatement = connection.prepareStatement(updateCustomerRewardsQuery);
-        preparedStatement.setInt(1, rewards);
+        preparedStatement = connection.prepareStatement(updateCustomerRewardsQuery);
+        preparedStatement.setInt(1, customerRewards);
         preparedStatement.setString(2, customerId);
 
         preparedStatement.executeUpdate();
@@ -365,7 +388,7 @@ public class HotelBookingDao {
     public boolean cancelReservation(String bookingId) {
 
         LocalDate currentDate = LocalDate.now(ZoneId.of( "America/Montreal" ));
-        String fetchBookingDateQuery = "Select from_date from booking where booking_id = ?";
+        String fetchBookingDateQuery = "Select from_date, customer_id, total_price from booking where booking_id = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(fetchBookingDateQuery);
             preparedStatement.setString(1, bookingId);
@@ -374,23 +397,28 @@ public class HotelBookingDao {
             if (resultSet.next()) {
                 String reservationStartDateStr = resultSet.getString(1);
                 LocalDate reservationStartDate = LocalDate.parse(reservationStartDateStr);
-                logger.info("Current Date "+ currentDate + " and reservation date "+reservationStartDate +" is possible ? "+currentDate.isAfter(reservationStartDate));
+                logger.info("Current Date "+ currentDate + " and reservation date "+reservationStartDate +" is possible ? "+currentDate.isBefore(reservationStartDate));
                 if (currentDate.isAfter(reservationStartDate)) {
                     return false;
                 }
             }
 
-            String cancelReservationQuery = "Delete * from booking where booking_id = ?";
+            String customerId = resultSet.getString(2);
+            int rewards = (-1) * resultSet.getInt(3) / 10;
+
+            updateCustomerRewards(customerId, rewards);
+
+            String cancelReservationQuery = "Delete from booking where booking_id = ?";
 
             preparedStatement = connection.prepareStatement(cancelReservationQuery);
             preparedStatement.setString(1, bookingId);
-            preparedStatement.executeUpdate();
+            preparedStatement.execute();
 
-            cancelReservationQuery = "Delete * from roomsBooked where booking_id = ?";
+            cancelReservationQuery = "Delete from roomsBooked where booking_id = ?";
 
             preparedStatement = connection.prepareStatement(cancelReservationQuery);
             preparedStatement.setString(1, bookingId);
-            preparedStatement.executeUpdate();
+            preparedStatement.execute();
 
         } catch (SQLException e) {
             return false;
