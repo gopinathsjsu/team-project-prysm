@@ -50,16 +50,14 @@ public class HotelBookingDao {
         }
         return false;
     }
-    public Boolean loginEmployee (String username, String password) throws SQLException {
+    public boolean loginEmployee (String username, String password) throws SQLException {
         String sql = "select * from employee where employee_id=? and password=?";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
-        logger.info("connection established");
         preparedStatement.setString(1,username);
         preparedStatement.setString(2,password);
         ResultSet resultSet= preparedStatement.executeQuery();
 
         if (resultSet.next()){
-            logger.info("fromdb"+resultSet.getRow());
             return true;
         }
         return false;
