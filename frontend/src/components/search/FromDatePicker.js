@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import NumericInput from "react-numeric-input";
-import { Button } from "react-bootstrap";
+
 import "./DatePicker.css";
 //
 import "react-datepicker/dist/react-datepicker.css";
@@ -11,9 +11,7 @@ import {
   fromRooms,
   toDate,
 } from "../../store/actions/searchActions";
-import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import { backend } from "../config";
+import { useDispatch } from "react-redux";
 
 function FromDatePicker() {
   const [checkInDate, setCheckInDate] = useState(null);
@@ -21,10 +19,9 @@ function FromDatePicker() {
   const [numOfGuests, setnumOfGuests] = useState(1);
   const [numOfRooms, setnumOfRooms] = useState(1);
   const dispatch = useDispatch();
-  const { searchReducer } = useSelector((state) => state);
+
   dispatch(fromGuests(numOfGuests));
   dispatch(fromRooms(numOfRooms));
-  const searchReduxData = searchReducer.searchReducer;
 
   const handleCheckInDate = (date) => {
     setCheckInDate(date);

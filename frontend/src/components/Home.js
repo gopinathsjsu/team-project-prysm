@@ -10,26 +10,37 @@ import {
   Button,
   Modal,
   Form,
+  ToastContainer,
+  Toast,
 } from "react-bootstrap";
 import roomImage from "./Room1.jpg";
+
+import { MDBInput } from "mdbreact";
 
 import CountrySelect from "./search/CountrySelect";
 import CitySelect from "./search/CitySelect";
 import "./Home.css";
 import FromDate from "./search/FromDatePicker";
+import { pink } from "@mui/material/colors";
 import { connect, useSelector } from "react-redux";
 import axios from "axios";
 import { backend } from "./config";
 import ClearIcon from "@mui/icons-material/Clear";
 import DoneIcon from "@mui/icons-material/Done";
-import { fromPrices, initPrices } from "../store/actions/roomPriceActions";
+import DoneAllRoundedIcon from "@mui/icons-material/DoneAllRounded";
+import SmsFailedIcon from "@mui/icons-material/SmsFailed";
+import {
+  fromPrices,
+  initPrices,
+  resetPrice,
+} from "../store/actions/roomPriceActions";
 
 function Home(props) {
   const [hotelData, sethotelData] = useState([]);
   const [RoomData, setRoomData] = useState([]);
   const [flag, setFlag] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const { searchReducer } = useSelector((state) => state);
+  const { searchReducer, bookingPriceReducer } = useSelector((state) => state);
   const [flagRooms, setflagRooms] = useState(false);
   const [amenities, setAmenities] = useState({
     AllMeals: false,
@@ -39,8 +50,13 @@ function Home(props) {
     SwimmingPool: false,
     FitnessRoom: false,
   });
+  const [showToast, setShowToast] = useState(false);
+  const [showToastFailed, setShowToastFailed] = useState(false);
   const { roomPriceReducer } = useSelector((state) => state);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [singleRoom, setSingleRoom] = useState(false);
+  const [doubleRoom, setDoubleRoom] = useState(false);
+  const [suiteRoom, setSuiteRoom] = useState(false);
   const styles = {
     card: {
       backgroundColor: "White",
@@ -53,10 +69,26 @@ function Home(props) {
       borderRadius: 15,
     },
   };
-  const handleCloseModal = () => setShowModal(false);
+  const handleCloseModal = () => {
+    setShowModal(false);
+    props.resetPrice();
+    setTotalPrice(0);
+  };
 
   const searchReduxData = searchReducer.searchReducer;
   const roompriceRedux = roomPriceReducer.roomPriceReducer;
+  const bookPriceRedux = bookingPriceReducer.bookingPriceReducer;
+  const handleRoomCount = (e) => {
+    setAmenities({
+      ...amenities,
+    });
+    var check = {
+      roomType: e.target.name,
+      amenityBool: e.target.value,
+    };
+    console.log(e);
+    props.fromPrices(check);
+  };
   const handleCheck = (e) => {
     setAmenities({
       ...amenities,
@@ -71,16 +103,22 @@ function Home(props) {
   const handleSelectRoom = (e) => {
     if (e.target.name === "single" && e.target.checked) {
       setTotalPrice(totalPrice + roompriceRedux.SINGLE_BEDROOM);
+      setSingleRoom(true);
     } else if (e.target.name === "double" && e.target.checked) {
       setTotalPrice(totalPrice + roompriceRedux.DOUBLE_BEDROOM);
+      setDoubleRoom(true);
     } else if (e.target.name === "suite" && e.target.checked) {
       setTotalPrice(totalPrice + roompriceRedux.SUITE_BEDROOM);
+      setSuiteRoom(true);
     } else if (e.target.name === "single" && !e.target.checked) {
       setTotalPrice(totalPrice - roompriceRedux.SINGLE_BEDROOM);
+      setSingleRoom(false);
     } else if (e.target.name === "double" && !e.target.checked) {
       setTotalPrice(totalPrice - roompriceRedux.DOUBLE_BEDROOM);
+      setDoubleRoom(false);
     } else if (e.target.name === "suite" && !e.target.checked) {
       setTotalPrice(totalPrice - roompriceRedux.SUITE_BEDROOM);
+      setSuiteRoom(false);
     }
   };
   const handleOnClick = async () => {
@@ -114,12 +152,89 @@ function Home(props) {
     }
   };
 
+  const handleBooking = async () => {
+    let data = [
+      {
+        amenities: {
+          daily_continental_breakfast: bookPriceRedux.singleBedroom.breakFast,
+          fitness_room: bookPriceRedux.singleBedroom.fitnessRoom,
+          swimming_pool: bookPriceRedux.singleBedroom.swimmingPool,
+          jacuzzi: bookPriceRedux.singleBedroom.jaccuzzi,
+          daily_parking: bookPriceRedux.singleBedroom.dailyParking,
+          all_meals: bookPriceRedux.singleBedroom.allMeals,
+        },
+        room_type: "single",
+        count_of_rooms: bookPriceRedux.singleBedroom.roomCount,
+        price: roompriceRedux.SINGLE_BEDROOM,
+        hotel_id: hotelData.hotel_id,
+      },
+      {
+        amenities: {
+          daily_continental_breakfast: bookPriceRedux.doubleBedroom.breakFast,
+          fitness_room: bookPriceRedux.doubleBedroom.fitnessRoom,
+          swimming_pool: bookPriceRedux.doubleBedroom.swimmingPool,
+          jacuzzi: bookPriceRedux.doubleBedroom.jaccuzzi,
+          daily_parking: bookPriceRedux.doubleBedroom.dailyParking,
+          all_meals: bookPriceRedux.doubleBedroom.allMeals,
+        },
+        room_type: "double",
+        count_of_rooms: bookPriceRedux.doubleBedroom.roomCount,
+        price: roompriceRedux.DOUBLE_BEDROOM,
+        hotel_id: hotelData.hotel_id,
+      },
+      {
+        amenities: {
+          daily_continental_breakfast: bookPriceRedux.suiteBedroom.breakFast,
+          fitness_room: bookPriceRedux.suiteBedroom.fitnessRoom,
+          swimming_pool: bookPriceRedux.suiteBedroom.swimmingPool,
+          jacuzzi: bookPriceRedux.suiteBedroom.jaccuzzi,
+          daily_parking: bookPriceRedux.suiteBedroom.dailyParking,
+          all_meals: bookPriceRedux.suiteBedroom.allMeals,
+        },
+        room_type: "suite",
+        count_of_rooms: bookPriceRedux.suiteBedroom.roomCount,
+        price: roompriceRedux.SUITE_BEDROOM,
+        hotel_id: hotelData.hotel_id,
+      },
+    ];
+    console.log(JSON.stringify(data) + "Ye hai data");
+    setShowModal(false);
+
+    let sendData = [];
+    if (singleRoom) {
+      sendData.push(data[0]);
+    }
+    if (doubleRoom) {
+      sendData.push(data[1]);
+    }
+    if (suiteRoom) {
+      sendData.push(data[2]);
+    }
+    console.log(JSON.stringify(sendData) + "Send");
+    setSingleRoom(false);
+    setDoubleRoom(false);
+    setSuiteRoom(false);
+
+    try {
+      const response = await axios.post(`${backend}/bookRooms`, sendData);
+      console.log(response);
+      if (response.data == "0") {
+        setShowToastFailed(true);
+      } else {
+        setShowToast(true);
+      }
+    } catch (error) {}
+    props.resetPrice();
+    setTotalPrice(0);
+  };
+
   const fetchRooms = async (hotelID) => {
     try {
-      const response = await axios.get(`${backend}/viewRooms/`, {
+      const response = await axios.get(`${backend}/fetchRooms/`, {
         params: { hotel_id: hotelID },
       });
       var temp = {};
+      console.log(JSON.stringify(response));
       response.data.map(function (room) {
         if (room.room_type === "single") {
           temp["single"] = room.price;
@@ -165,7 +280,16 @@ function Home(props) {
                           ) : (
                             <td>{roompriceRedux.SUITE_BEDROOM} </td>
                           )}
-                          <td></td>
+                          <td>
+                            <label>Rooms</label>
+                            <MDBInput
+                              type="number"
+                              min={1}
+                              max={room.count_of_rooms}
+                              name={`RoomCount-${room.room_type}`}
+                              onChange={handleRoomCount}
+                            />
+                          </td>
                         </tr>
                         <tr>
                           <td>
@@ -352,7 +476,6 @@ function Home(props) {
           </div>
         </Card.Body>
       </Card>
-
       {responseData}
       <Modal size="lg" show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
@@ -365,13 +488,37 @@ function Home(props) {
         </Modal.Header>
         <Modal.Body>
           {responseRoomData}
-          <Button variant="outline-dark" size="md">
+          <Button variant="outline-dark" size="lg" onClick={handleBooking}>
             Book Room
           </Button>
         </Modal.Body>
       </Modal>
+      <ToastContainer className="p-3" position="top-end">
+        <Toast
+          onClose={() => setShowToast(false)}
+          show={showToast}
+          delay={3000}
+          autohide
+        >
+          <Toast.Body>
+            <DoneAllRoundedIcon color="success" /> Booking Successful!
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
+      <ToastContainer className="p-3" position="top-end">
+        <Toast
+          onClose={() => setShowToastFailed(false)}
+          show={showToastFailed}
+          delay={3000}
+          autohide
+        >
+          <Toast.Body>
+            <SmsFailedIcon sx={{ color: pink[500] }} /> Booking Failed!
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
     </>
   );
 }
 
-export default connect(null, { fromPrices, initPrices })(Home);
+export default connect(null, { fromPrices, initPrices, resetPrice })(Home);
