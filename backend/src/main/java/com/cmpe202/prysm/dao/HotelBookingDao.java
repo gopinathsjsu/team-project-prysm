@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -178,7 +177,7 @@ public class HotelBookingDao {
 
                 String queryToFetchCount = "select count(*) from booking B where hotel_id=? and (? between B.from_date and B.to_date) or " +
                                             "(? between B.from_date and B.to_date) group by ?;";
-                preparedStatement =connection.prepareStatement(queryToFetchCount);
+                preparedStatement = connection.prepareStatement(queryToFetchCount);
                 preparedStatement.setString(1,hotelId);
                 preparedStatement.setString(2, fromDate);
                 preparedStatement.setString(3, toDate);
@@ -210,7 +209,9 @@ public class HotelBookingDao {
         while (resultSet.next()) {
             bookingIds.add(resultSet.getString(1));
         }
+        logger.info(bookingIds.toString());
         //use booking Id to fetch room types from roomsBooked
+        occupiedRooms.clear();
         for(String bookingId : bookingIds) {
             logger.info("booking Id " + bookingId);
             String queryToFetchOccupiedRoomTypes = "Select room_type, count_of_rooms from roomsBooked where booking_id = ? ";
@@ -218,9 +219,10 @@ public class HotelBookingDao {
             preparedStatement.setString(1, bookingId);
 
             resultSet = preparedStatement.executeQuery();
-            occupiedRooms.clear();
             while (resultSet.next()) {
-                occupiedRooms.put(resultSet.getString(1), resultSet.getInt(2));
+                String roomType = resultSet.getString(1);
+                int countOfRooms = resultSet.getInt(2);
+                occupiedRooms.put(roomType, occupiedRooms.getOrDefault(roomType, 0)+countOfRooms);
             }
 
         }
@@ -228,10 +230,9 @@ public class HotelBookingDao {
 
 
     public List<Room> fetchRooms(String hotelId) throws SQLException {
-
+        loadOccupiedRoomData(FROM_DATE, TO_DATE, HOTEL_ID);
         List<Room> availableRoomsList = new ArrayList<>();
         String fetchRoomsQuery = "Select * from room R join Hotel H on R.hotel_id = H.hotel_id where H.hotel_id = ?";
-        logger.info("availableRooms size" + availableRoomsList.size() );
         for(Hotel hotel : availableHotelsList) {
             logger.info("hotel Id "+hotelId +" and existing hotelId "+hotel.getHotel_id());
             if(hotel.getHotel_id().trim().equals(hotelId.trim())) {

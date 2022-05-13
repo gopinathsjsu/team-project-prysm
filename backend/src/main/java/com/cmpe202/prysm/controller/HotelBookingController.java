@@ -104,8 +104,8 @@ public class HotelBookingController {
     @PostMapping(path = "bookRooms",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public int bookRooms(boolean bookWithRewards ,@RequestBody List<Room> selectedRooms) throws SQLException {
-        return hotelBookingDao.bookRooms(bookWithRewards, selectedRooms);
+    public int bookRooms(@RequestBody BookWithRewards bookWithRewards) throws SQLException {
+        return hotelBookingDao.bookRooms(bookWithRewards.isBookWithRewards(), bookWithRewards.getSelectedRooms());
     }
 
     //Cancel Reservation
