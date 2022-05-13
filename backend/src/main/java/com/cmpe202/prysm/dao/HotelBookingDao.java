@@ -5,6 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,24 +29,30 @@ public class HotelBookingDao {
     private static String HOTEL_ID = new String();
     private static String FROM_DATE = new String();
     private static String TO_DATE = new String();
-    private static String USER_NAME = new String("prashanth@gmail.com");
+    private static String USER_NAME = new String("202@gmail.com");
+    private static int userRewards = 0;
 
     public HotelBookingDao() throws SQLException {
     }
 
 
     public Boolean loginUser (String username, String password) throws SQLException {
-        String sql = "select * from employee where employee_id=? and password=?";
+        String sql = "select * from customer where employee_id=? and password=?";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
         logger.info("connection established");
         preparedStatement.setString(1,username);
         preparedStatement.setString(2,password);
         ResultSet resultSet= preparedStatement.executeQuery();
         if (resultSet.next()){
+            userRewards = resultSet.getInt(4);
             USER_NAME = new String(username);
             return true;
         }
         return false;
+    }
+
+    public double getUserRewards() {
+        return userRewards;
     }
 
     public Boolean registerUser (String username, String password, String name) throws SQLException {
@@ -202,7 +211,7 @@ public class HotelBookingDao {
         TO_DATE = toDate == null ? TO_DATE : new String(toDate);
     }
 
-    public int bookRooms(List<Room> selectedRooms) {
+    public int bookRooms(boolean bookWithRewards, List<Room> selectedRooms) {
 
         //write into booking table with count of rooms booked and from and to date
         //INSERT INTO booking VALUES (NULL,"prashanth@gmail.com","1236", '2022-05-11', '2022-05-14', 1, 200);
@@ -212,6 +221,9 @@ public class HotelBookingDao {
         for(Room room : selectedRooms) {
             totalPrice += room.getPrice() * room.getCount_of_rooms();
             totalRooms += room.getCount_of_rooms();
+        }
+        if(bookWithRewards) {
+            totalPrice -= userRewards;
         }
         try {
             String queryToInsertInBooking = "Insert into booking values (NULL, ?, ? , ? , ?, ?, ? )";
@@ -248,11 +260,11 @@ public class HotelBookingDao {
                 preparedStatement.setInt(9, room.getCount_of_rooms());
 
                 preparedStatement.executeUpdate();
+                updateCustomerRewards(USER_NAME, totalPrice % 100);
             }
         } catch (SQLException e) {
             return 0;
         }
-
         return bookingId;
 
     }
@@ -280,6 +292,52 @@ public class HotelBookingDao {
         return userBookingInformation;
     }
 
+    private void updateCustomerRewards(String customerId, int rewards) throws SQLException {
+
+        String updateCustomerRewardsQuery = "Update customer set rewards = ? where customer_id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(updateCustomerRewardsQuery);
+        preparedStatement.setInt(1, rewards);
+        preparedStatement.setString(2, customerId);
+
+        preparedStatement.executeUpdate();
+
+    }
+
+    public boolean cancelReservation(String bookingId) {
+
+        LocalDate currentDate = LocalDate.now(ZoneId.of( "America/Montreal" ));
+        String fetchBookingDateQuery = "Select from_date from booking where booking_id = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(fetchBookingDateQuery);
+            preparedStatement.setString(1, bookingId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                String reservationStartDateStr = resultSet.getString(1);
+                LocalDate reservationStartDate = LocalDate.parse(reservationStartDateStr);
+                logger.info("Current Date "+ currentDate + " and reservation date "+reservationStartDate +" is possible ? "+currentDate.isAfter(reservationStartDate));
+                if (currentDate.isAfter(reservationStartDate)) {
+                    return false;
+                }
+            }
+
+            String cancelReservationQuery = "Delete * from booking where booking_id = ?";
+
+            preparedStatement = connection.prepareStatement(cancelReservationQuery);
+            preparedStatement.setString(1, bookingId);
+            preparedStatement.executeUpdate();
+
+            cancelReservationQuery = "Delete * from roomsBooked where booking_id = ?";
+
+            preparedStatement = connection.prepareStatement(cancelReservationQuery);
+            preparedStatement.setString(1, bookingId);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
+    }
 
 
 

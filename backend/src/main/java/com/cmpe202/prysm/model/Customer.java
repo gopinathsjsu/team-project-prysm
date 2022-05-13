@@ -1,8 +1,5 @@
 package com.cmpe202.prysm.model;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class Customer {
 
     private String username;
@@ -11,11 +8,9 @@ public class Customer {
 
     private String name;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+    public Customer(String username, String password, String name) {
+        this.username = username;
+        this.password = password;
         this.name = name;
     }
 
@@ -35,4 +30,11 @@ public class Customer {
         this.password = password;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

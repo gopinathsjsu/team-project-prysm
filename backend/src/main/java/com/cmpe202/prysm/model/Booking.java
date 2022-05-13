@@ -9,6 +9,15 @@ public class Booking {
     private String customer_id;
     private String from_date;
     private String to_date;
+    private String booking_id;
+
+    public String getBooking_id() {
+        return booking_id;
+    }
+
+    public void setBooking_id(String booking_id) {
+        this.booking_id = booking_id;
+    }
 
     public int getPrice() {
         return price;

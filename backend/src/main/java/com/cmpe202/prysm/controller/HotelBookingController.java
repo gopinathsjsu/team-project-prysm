@@ -60,16 +60,16 @@ public class HotelBookingController {
     }
 
     //Search for Rooms in Hotel
-    @GetMapping(path = "fetchRooms",
+    @GetMapping(path = "fetchRooms/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Room> fetchRooms(@RequestParam String hotel_id) throws SQLException {
         return hotelBookingDao.fetchRooms(hotel_id);
     }
 
     //Fetch Customer Booking History
-    @GetMapping(path = "fetchCustomerHistory",
+    @GetMapping(path = "fetchCustomerHistory/",
                 produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<BookingInformation> fetchCustomerHistory(@RequestParam String customerId) throws  SQLException{
+    public List<BookingInformation> fetchCustomerHistory(@RequestParam String customerId) throws SQLException{
         return hotelBookingDao.fetchCustomerHistory(customerId);
     }
 
@@ -77,22 +77,21 @@ public class HotelBookingController {
     @PostMapping(path = "bookRooms",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public int bookRooms(@RequestBody List<Room> selectedRooms) throws SQLException {
-        return hotelBookingDao.bookRooms(selectedRooms);
+    public int bookRooms(boolean bookWithRewards ,@RequestBody List<Room> selectedRooms) throws SQLException {
+        return hotelBookingDao.bookRooms(bookWithRewards, selectedRooms);
     }
 
-    //Change Reservation
-    @PostMapping(path = "changeReservation",
+    //Cancel Reservation
+    @PostMapping(path = "cancelReservation",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public boolean changeReservation(@RequestBody String bookingId) throws SQLException {
-        return hotelBookingDao.changeReservation(bookingId);
+    public boolean changeReservation(@RequestBody Booking booking) throws SQLException {
+        return hotelBookingDao.cancelReservation(booking.getBooking_id());
     }
 
 
+    //Cancel Reservation
 
-
-    //Change/Cancel reservations
 
 
 }
