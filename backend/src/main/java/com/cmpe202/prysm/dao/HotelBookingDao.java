@@ -1,8 +1,6 @@
 package com.cmpe202.prysm.dao;
 
-import com.cmpe202.prysm.model.Amenities;
-import com.cmpe202.prysm.model.Hotel;
-import com.cmpe202.prysm.model.Room;
+import com.cmpe202.prysm.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -25,6 +23,11 @@ public class HotelBookingDao {
     private static List<Hotel> availableHotelsList = new ArrayList<>();
     private static Map<String, Integer> occupiedRooms = new HashMap<>();
 
+    private static String HOTEL_ID = new String();
+    private static String FROM_DATE = new String();
+    private static String TO_DATE = new String();
+    private static String USER_NAME = new String("prashanth@gmail.com");
+
     public HotelBookingDao() throws SQLException {
     }
 
@@ -37,7 +40,7 @@ public class HotelBookingDao {
         preparedStatement.setString(2,password);
         ResultSet resultSet= preparedStatement.executeQuery();
         if (resultSet.next()){
-            logger.info("fromdb"+resultSet.getRow());
+            USER_NAME = new String(username);
             return true;
         }
         return false;
@@ -93,6 +96,7 @@ public class HotelBookingDao {
         }
         availableHotelsList.clear();
         availableHotelsList.addAll(validHotels);
+        loadStaticDataToBookRooms(null, fromDate, toDate);
         return validHotels;
     }
 
@@ -142,7 +146,7 @@ public class HotelBookingDao {
         //use booking Id to fetch room types from roomsBooked
         for(String bookingId : bookingIds) {
             logger.info("booking Id " + bookingId);
-            String queryToFetchOccupiedRoomTypes = "Select room_type, count(*) from roomsBooked where booking_id = ? group by room_type";
+            String queryToFetchOccupiedRoomTypes = "Select room_type, count_of_rooms from roomsBooked where booking_id = ? ";
             preparedStatement = connection.prepareStatement(queryToFetchOccupiedRoomTypes);
             preparedStatement.setString(1, bookingId);
 
@@ -188,8 +192,97 @@ public class HotelBookingDao {
                 }
             }
         }
-
+        loadStaticDataToBookRooms(hotelId , null , null);
         return availableRoomsList;
     }
+
+    public void loadStaticDataToBookRooms(String hotelId, String fromDate, String toDate) {
+        HOTEL_ID = hotelId == null ? HOTEL_ID : new String(hotelId);
+        FROM_DATE = fromDate == null ? FROM_DATE : new String(fromDate);
+        TO_DATE = toDate == null ? TO_DATE : new String(toDate);
+    }
+
+    public int bookRooms(List<Room> selectedRooms) {
+
+        //write into booking table with count of rooms booked and from and to date
+        //INSERT INTO booking VALUES (NULL,"prashanth@gmail.com","1236", '2022-05-11', '2022-05-14', 1, 200);
+        int totalPrice = 0;
+        int totalRooms = 0;
+        int bookingId = 0;
+        for(Room room : selectedRooms) {
+            totalPrice += room.getPrice() * room.getCount_of_rooms();
+            totalRooms += room.getCount_of_rooms();
+        }
+        try {
+            String queryToInsertInBooking = "Insert into booking values (NULL, ?, ? , ? , ?, ?, ? )";
+            PreparedStatement preparedStatement = connection.prepareStatement(queryToInsertInBooking);
+            preparedStatement.setString(1, USER_NAME);
+            preparedStatement.setString(2, HOTEL_ID);
+            preparedStatement.setString(3, FROM_DATE);
+            preparedStatement.setString(4, TO_DATE);
+            preparedStatement.setInt(5, totalRooms);
+            preparedStatement.setInt(6, totalPrice);
+
+            preparedStatement.executeUpdate();
+
+            String queryToFetchBookingId = "Select max(booking_id) from Booking";
+            preparedStatement = connection.prepareStatement(queryToFetchBookingId);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            bookingId = resultSet.getInt(1);
+
+            //write into roomsBooked table with room type booked
+            String queryToInsertInRoomsBooked = "Insert into roomsBooked values (?, ? , ? , ? , ? , ? , ? , ?, ?) ";
+            for (Room room : selectedRooms) {
+                Amenities amenities = room.getAmenities();
+                preparedStatement = connection.prepareStatement(queryToInsertInRoomsBooked);
+                preparedStatement.setInt(1, bookingId);
+                preparedStatement.setString(2, room.getRoom_type());
+                preparedStatement.setBoolean(3, amenities.getDaily_continental_breakfast());
+                preparedStatement.setBoolean(4, amenities.getFitness_room());
+                preparedStatement.setBoolean(5, amenities.getSwimming_pool());
+                preparedStatement.setBoolean(6, amenities.getJacuzzi());
+                preparedStatement.setBoolean(7, amenities.getDaily_parking());
+                preparedStatement.setBoolean(8, amenities.getAll_meals());
+                preparedStatement.setInt(9, room.getCount_of_rooms());
+
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            return 0;
+        }
+
+        return bookingId;
+
+    }
+
+    public List<BookingInformation> fetchCustomerHistory(String customerId) throws SQLException {
+
+        String fetchCustomerHistoryQuery = "Select R.*, B.hotel_id, B.from_date, B.to_date, B.total_price from roomsBooked R join booking B " +
+                                           "on R.booking_id = B.booking_id where B.customer_id = ?;";
+
+        PreparedStatement preparedStatement = connection.prepareStatement(fetchCustomerHistoryQuery);
+        preparedStatement.setString(1, customerId);
+
+        List<BookingInformation> userBookingInformation = new ArrayList<>();
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            Amenities amenities = new Amenities(resultSet.getBoolean(3), resultSet.getBoolean(4), resultSet.getBoolean(5), resultSet.getBoolean(6),
+                                                resultSet.getBoolean(7), resultSet.getBoolean(3));
+            BookingInformation bookingInformation = new BookingInformation(resultSet.getString(1), resultSet.getString(10),
+                                                     resultSet.getString(2), resultSet.getString(11), resultSet.getString(12),
+                                                    resultSet.getInt(13), amenities);
+
+            userBookingInformation.add(bookingInformation);
+        }
+        return userBookingInformation;
+    }
+
+
+
+
+
 
 }

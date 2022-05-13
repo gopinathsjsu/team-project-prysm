@@ -1,15 +1,11 @@
 package com.cmpe202.prysm.controller;
 
 import com.cmpe202.prysm.dao.HotelBookingDao;
-import com.cmpe202.prysm.model.Booking;
-import com.cmpe202.prysm.model.Customer;
-import com.cmpe202.prysm.model.Hotel;
-import com.cmpe202.prysm.model.Room;
+import com.cmpe202.prysm.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
 import java.sql.SQLException;
 
 import java.util.*;
@@ -25,7 +21,7 @@ public class HotelBookingController {
     public HotelBookingController() throws SQLException {
     }
 
-    //login
+    //login User
     @PostMapping(path = "loginUser")
     public String loginUser(@RequestBody Customer customer) throws SQLException {
         //fetch from DB and check if user exists
@@ -36,7 +32,7 @@ public class HotelBookingController {
         return "Fail";
     }
 
-    //createUser
+    //Register User
     @PostMapping(path = "registerUser",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -51,6 +47,7 @@ public class HotelBookingController {
 
     //manage hotel rewards account
 
+
     //Search for Hotels
     @PostMapping(path = "fetchHotels",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -63,29 +60,34 @@ public class HotelBookingController {
     }
 
     //Search for Rooms in Hotel
-    @GetMapping(path = "fetchRooms/",
+    @GetMapping(path = "fetchRooms",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Room> fetchRooms(@RequestParam String hotel_id) throws SQLException {
         return hotelBookingDao.fetchRooms(hotel_id);
     }
 
+    //Fetch Customer Booking History
+    @GetMapping(path = "fetchCustomerHistory",
+                produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<BookingInformation> fetchCustomerHistory(@RequestParam String customerId) throws  SQLException{
+        return hotelBookingDao.fetchCustomerHistory(customerId);
+    }
 
+    //Book Rooms
+    @PostMapping(path = "bookRooms",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public int bookRooms(@RequestBody List<Room> selectedRooms) throws SQLException {
+        return hotelBookingDao.bookRooms(selectedRooms);
+    }
 
-
-    //Book one or more rooms for stay up to 1 week
-    /*
-        Options may be selected for each room for one or more amenities:
-        Daily Continental Breakfast
-        Access to fitness room
-        Access to Swimming Pool/Jacuzzi
-        Daily Parking
-        All meals included (Breakfast, Lunch, Dinner)
-     */
-//    @GetMapping(path = "bookHotel",
-//                produces = MediaType.APPLICATION_JSON_VALUE)
-//    public boolean bookHotel(@RequestBody Booking booking) {
-//        return hotelBookingDao.bookHotel(booking);
-//    }
+    //Change Reservation
+    @PostMapping(path = "changeReservation",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public boolean changeReservation(@RequestBody String bookingId) throws SQLException {
+        return hotelBookingDao.changeReservation(bookingId);
+    }
 
 
 
