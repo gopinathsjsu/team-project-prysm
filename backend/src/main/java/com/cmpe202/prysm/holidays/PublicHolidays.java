@@ -3,7 +3,9 @@ package com.cmpe202.prysm.holidays;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PublicHolidays {
+public class PublicHolidays implements PriceHandler {
+
+    private PriceHandler next;
 
     public static PublicHolidays publicHolidays = null;
     public List<String> publicHolidaysList = new ArrayList<>();
@@ -17,7 +19,7 @@ public class PublicHolidays {
     private static String CHRISTMAS_DAY = "2022-12-26";
 
 
-    private PublicHolidays(){
+    public PublicHolidays(){
 
         publicHolidaysList.add(MEMORIAL_DAY);
         publicHolidaysList.add(INDEPENDENCE_DAY);
@@ -29,11 +31,14 @@ public class PublicHolidays {
 
     }
 
-    public static PublicHolidays getInstance(){
-        if(publicHolidays == null) {
-            publicHolidays = new PublicHolidays();
-        }
-        return publicHolidays;
+    @Override
+    public void setPriceHandler(PriceHandler priceHandler) {
+        this.next = priceHandler;
     }
 
+    @Override
+    public int addDynamicPricing(int totalPrice) {
+        return totalPrice + 50;
+
+    }
 }

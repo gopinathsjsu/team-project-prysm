@@ -1,5 +1,6 @@
 package com.cmpe202.prysm.controller;
 
+import com.cmpe202.prysm.dao.AdminDao;
 import com.cmpe202.prysm.dao.HotelBookingDao;
 import com.cmpe202.prysm.model.*;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ public class HotelBookingController {
     Logger logger = LoggerFactory.getLogger(HotelBookingController.class);
 
     HotelBookingDao hotelBookingDao=new HotelBookingDao();
+    AdminDao adminDao = new AdminDao();
 
     public HotelBookingController() throws SQLException {
     }
@@ -36,7 +38,7 @@ public class HotelBookingController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Employee loginEmployee(@RequestBody Employee employee) throws SQLException {
         //fetch from DB and check if employee exists
-        return hotelBookingDao.loginEmployee(employee.getUsername(), employee.getPassword());
+        return adminDao.loginEmployee(employee.getUsername(), employee.getPassword());
     }
 
 
@@ -70,7 +72,7 @@ public class HotelBookingController {
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public Boolean addHotel(@RequestBody Hotel hotel) throws SQLException {
         //check if all the required information is provided by the user and register User
-        return hotelBookingDao.addHotel(hotel);
+        return adminDao.addHotel(hotel);
     }
 
 
@@ -94,7 +96,7 @@ public class HotelBookingController {
     @GetMapping(path = "getHotels",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Hotel> getHotels() throws SQLException {
-        return hotelBookingDao.getHotels();
+        return adminDao.getHotelsForAdmin();
     }
 
 
@@ -131,11 +133,6 @@ public class HotelBookingController {
         return hotelBookingDao.updateReservation(bookingInformation.getBookingId(),
                                 bookingInformation.getFromDate(), bookingInformation.getToDate());
     }
-
-
-
-
-
 
 
 }

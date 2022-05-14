@@ -1,11 +1,13 @@
 package com.cmpe202.prysm.dao;
 
 import com.cmpe202.prysm.holidays.PublicHolidays;
+import com.cmpe202.prysm.holidays.SeasonalPricing;
 import com.cmpe202.prysm.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import java.sql.*;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -57,24 +59,6 @@ public class HotelBookingDao {
     }
 
 
-    public Employee loginEmployee (String username, String password) throws SQLException {
-        String sql = "select * from employee where employee_id = ? and password = ?";
-        Employee employee = new Employee();
-        PreparedStatement preparedStatement=connection.prepareStatement(sql);
-        preparedStatement.setString(1,username);
-        preparedStatement.setString(2,password);
-        ResultSet resultSet= preparedStatement.executeQuery();
-
-        if (resultSet.next()){
-           employee.setUsername(resultSet.getString(1));
-           employee.setPassword(resultSet.getString(3));
-           employee.setName(resultSet.getString(4));
-        }
-        return  employee;
-    }
-
-
-
     public int getCustomerRewards() {
         return userRewards;
     }
@@ -89,52 +73,6 @@ public class HotelBookingDao {
         preparedStatement.setString(2,password);
         preparedStatement.setString(3,name);
         preparedStatement.setInt(4,rewards);
-        int row= preparedStatement.executeUpdate();
-        if (row > 0){
-            return true;
-        }
-        return false;
-    }
-
-
-    public List<Hotel> getHotels() throws SQLException {
-        List<Hotel> hotels = new ArrayList<>();
-        String sql = "select * from hotel";
-        PreparedStatement preparedStatement=connection.prepareStatement(sql);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        while (resultSet.next()){
-            Hotel hotel = new Hotel();
-            hotel.setHotel_id(resultSet.getString(1));
-            hotel.setHotel_name(resultSet.getString(2));
-            hotel.setCountry(resultSet.getString(3));
-            hotel.setCity(resultSet.getString(4));
-            hotel.setDaily_continental_breakfast(resultSet.getBoolean(5));
-            hotel.setFitness_room(resultSet.getBoolean(6));
-            hotel.setSwimming_pool(resultSet.getBoolean(7));
-            hotel.setJacuzzi(resultSet.getBoolean(8));
-            hotel.setDaily_parking(resultSet.getBoolean(9));
-            hotel.setAll_meals(resultSet.getBoolean(10));
-            hotels.add(hotel);
-        }
-        return hotels;
-    }
-
-
-    public boolean addHotel(Hotel hotel) throws SQLException {
-        String queryToAddHotels = "insert into hotel (hotel_id,hotel_name,country,city,daily_continental_breakfast,fitness_room, " +
-                "Swimming_pool, jacuzzi, daily_parking, all_meals ) values (?,?,?,?,?,?,?,?,?,?)";
-
-        PreparedStatement preparedStatement=connection.prepareStatement(queryToAddHotels);
-        preparedStatement.setString(1,hotel.getHotel_id());
-        preparedStatement.setString(2,hotel.getHotel_name());
-        preparedStatement.setString(3,hotel.getCountry());
-        preparedStatement.setString(4,hotel.getCity());
-        preparedStatement.setBoolean(5,hotel.isDaily_continental_breakfast());
-        preparedStatement.setBoolean(6,hotel.isFitness_room());
-        preparedStatement.setBoolean(7,hotel.isSwimming_pool());
-        preparedStatement.setBoolean(8,hotel.isJacuzzi());
-        preparedStatement.setBoolean(9,hotel.isDaily_parking());
-        preparedStatement.setBoolean(10,hotel.isAll_meals());
         int row= preparedStatement.executeUpdate();
         if (row > 0){
             return true;
@@ -251,6 +189,19 @@ public class HotelBookingDao {
 
         loadOccupiedRoomData(FROM_DATE, TO_DATE, HOTEL_ID);
 
+        int dynamicPrice = 0;
+
+        SeasonalPricing seasonalPricing = SeasonalPricing.getSeasonalPricing();
+        seasonalPricing.setDate(FROM_DATE);
+        dynamicPrice = seasonalPricing.addDynamicPricing(dynamicPrice);
+
+        LocalDate localDate = LocalDate.parse(FROM_DATE);
+        DayOfWeek dayOfWeek = localDate.getDayOfWeek();
+
+        if(dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
+            dynamicPrice += 10;
+        }
+
         for(Hotel hotel : availableHotelsList) {
             if(hotel.getHotel_id().trim().equals(hotelId.trim())) {
                 Map<String, Integer> totalAvailableRoomsMap = new HashMap<>();
@@ -272,7 +223,8 @@ public class HotelBookingDao {
                             resultSet.getBoolean(11), resultSet.getBoolean(12), resultSet.getBoolean(13), resultSet.getBoolean(13));
                     String roomType = resultSet.getString(1);
                     int availableRooms = totalAvailableRoomsMap.getOrDefault(roomType, 0) - occupiedRooms.getOrDefault(roomType, 0);
-                    Room room = new Room(amenities, roomType, availableRooms, resultSet.getInt(4), resultSet.getString(2));
+
+                    Room room = new Room(amenities, roomType, availableRooms, resultSet.getInt(4)+dynamicPrice, resultSet.getString(2));
                     availableRoomsList.add(room);
                 }
             }
@@ -291,9 +243,6 @@ public class HotelBookingDao {
 
     public int bookRooms(boolean bookWithRewards, List<Room> selectedRooms) {
 
-        PublicHolidays publicHolidays = PublicHolidays.getInstance();
-        List<String> publicHolidaysList = publicHolidays.publicHolidaysList;
-
         //write into booking table with count of rooms booked and from and to date
         int totalPrice = 0;
         int totalRooms = 0;
@@ -304,9 +253,6 @@ public class HotelBookingDao {
         }
         if(bookWithRewards) {
             totalPrice -= userRewards;
-        }
-        if(publicHolidaysList.contains(FROM_DATE)) {
-            totalPrice += 50;
         }
 
         try {
@@ -540,17 +486,4 @@ public class HotelBookingDao {
 
 
 
-
-//    public String getEmployeeName(String username) throws SQLException {
-//        String employeeName = "";
-//        String sql = "select employee_name from employee where employee_id = ?";
-//
-//        PreparedStatement preparedStatement=connection.prepareStatement(sql);
-//        preparedStatement.setString(1,username);
-//        ResultSet resultSet= preparedStatement.executeQuery();
-//        if(resultSet.next()){
-//            employeeName = resultSet.getString(1);
-//        }
-//        return employeeName;
-//    }
 }
