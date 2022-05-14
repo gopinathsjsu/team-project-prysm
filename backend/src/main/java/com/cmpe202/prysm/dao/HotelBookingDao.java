@@ -48,6 +48,7 @@ public class HotelBookingDao {
 
         if (resultSet.next()){
             customer = new Customer(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3), resultSet.getInt(4));
+
             userRewards = resultSet.getInt(4);
             USER_NAME = new String(username);
         }
@@ -78,12 +79,15 @@ public class HotelBookingDao {
     }
 
 
-    public boolean registerUser (String username, String password, String name) throws SQLException {
-        String sql = "insert into customer (customer_id,password,customer_name ) values (?,?,?)";
+    public boolean registerUser (String username, String password, String name, int rewards) throws SQLException {
+        logger.info(String.valueOf(rewards));
+
+        String sql = "insert into customer (customer_id,password,customer_name, rewards ) values (?,?,?,?)";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
         preparedStatement.setString(1,username);
         preparedStatement.setString(2,password);
         preparedStatement.setString(3,name);
+        preparedStatement.setInt(4,rewards);
         int row= preparedStatement.executeUpdate();
         if (row > 0){
             return true;
@@ -523,18 +527,4 @@ public class HotelBookingDao {
 
         return false;
     }
-
-
-//    public String getEmployeeName(String username) throws SQLException {
-//        String employeeName = "";
-//        String sql = "select employee_name from employee where employee_id = ?";
-//
-//        PreparedStatement preparedStatement=connection.prepareStatement(sql);
-//        preparedStatement.setString(1,username);
-//        ResultSet resultSet= preparedStatement.executeQuery();
-//        if(resultSet.next()){
-//            employeeName = resultSet.getString(1);
-//        }
-//        return employeeName;
-//    }
 }

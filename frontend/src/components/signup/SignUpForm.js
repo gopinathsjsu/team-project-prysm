@@ -1,4 +1,5 @@
 import React from "react";
+import { backend } from "../config";
 import { Form, Button } from "react-bootstrap";
 import axios from "axios";
 const SignupForm = () => {
@@ -13,14 +14,12 @@ const SignupForm = () => {
       username: formValue.email,
       name: formValue.name,
       password: formValue.password,
+      rewwards: 10
     };
     console.log(data);
     try {
       // make axios post request
-      const response = await axios.post(
-        "http://localhost:8080/registerUser",
-        data
-      );
+      const response = await axios.post(`${backend}/registerUser`, data);
       console.log(response);
     } catch (error) {
       console.log(error);

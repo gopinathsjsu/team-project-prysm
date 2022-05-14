@@ -9,7 +9,6 @@ import { EmmployeeLogin } from "../../store/actions/EmployeeAction";
 
 
 const LoginForm = ({handleCloseLogin}) => {
-  const dispatch = useDispatch();
   const [formValue, setformValue] = React.useState({
     email: "",
     password: "",
@@ -39,7 +38,8 @@ const LoginForm = ({handleCloseLogin}) => {
     try {
       // make axios post request
       const response = await axios.post(`${backend}/loginUser`, data);
-      if(response.data === 'Success'){
+      const userData = response.data;
+      if(userData){
         handleCloseLogin();
         localStorage.setItem('userName',data.username);  
         localStorage.setItem("isLoggedIn" , true);

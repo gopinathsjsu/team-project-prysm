@@ -46,7 +46,7 @@ public class HotelBookingController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Boolean registerUser(@RequestBody Customer customer) throws SQLException {
         //check if all the required information is provided by the user and register User
-        if(hotelBookingDao.registerUser(customer.getUsername(), customer.getPassword(), customer.getName())){
+        if(hotelBookingDao.registerUser(customer.getUsername(), customer.getPassword(), customer.getName(), customer.getRewards())){
             return true;
         }
         return false;

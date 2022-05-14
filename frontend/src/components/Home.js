@@ -474,7 +474,9 @@ function Home(props) {
         { localStorage.getItem("isEmployeeLoggedIn") === "true" && (<h2>Welcome {localStorage.getItem("EmployeeName")} !</h2> )}
 
         {  localStorage.getItem("isUserLoggedIn") ==  "true"   && (<h2>Welcome {localStorage.getItem("UserName")} !</h2> )}
-        
+      </div>
+      <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', font:'caption', fontStyle:'oblique'}}>
+        { localStorage.getItem("isUserLoggedIn") === "true" && (<h2>Welcome {localStorage.getItem("rewardPoints")} !</h2> )}
       </div>
       <Card className="m-5 border-0 shadow" style={styles.card}>
         <Card.Body className="rowC">
