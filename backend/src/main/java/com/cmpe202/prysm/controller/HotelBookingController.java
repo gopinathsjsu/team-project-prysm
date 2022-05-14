@@ -135,4 +135,12 @@ public class HotelBookingController {
     }
 
 
+    //Check Loyalty
+    @GetMapping(path = "/getCustomerLoyalty",
+                produces = MediaType.APPLICATION_JSON_VALUE)
+    public boolean isCustomerLoyal() throws SQLException{
+        return hotelBookingDao.isCustomerLoyal();
+    }
+
+
 }

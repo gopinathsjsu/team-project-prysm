@@ -11,8 +11,8 @@ import java.util.List;
 @Repository
 public class AdminDao {
 
-    public final String dbUrl = "jdbc:mysql://127.0.0.1:3306/cmpe202project";
-    public final String username = "root";
+    public final String dbUrl = "jdbc:mysql://cmpe-202-prysm-db.c4aze5nwerob.us-west-1.rds.amazonaws.com:3306/cmpe202project";
+    public final String username = "admin";
     public final String password = "password";
 
     public Connection connection = DriverManager.getConnection(dbUrl,username,password);

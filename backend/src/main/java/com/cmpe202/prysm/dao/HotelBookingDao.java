@@ -1,6 +1,5 @@
 package com.cmpe202.prysm.dao;
 
-import com.cmpe202.prysm.holidays.PublicHolidays;
 import com.cmpe202.prysm.holidays.SeasonalPricing;
 import com.cmpe202.prysm.model.*;
 import org.slf4j.Logger;
@@ -18,8 +17,8 @@ import java.util.Map;
 @Repository
 public class HotelBookingDao {
 
-    public final String dbUrl = "jdbc:mysql://127.0.0.1:3306/cmpe202project";
-    public final String username = "root";
+    public final String dbUrl = "jdbc:mysql://cmpe-202-prysm-db.c4aze5nwerob.us-west-1.rds.amazonaws.com:3306/cmpe202project";
+    public final String username = "admin";
     public final String password = "password";
 
     public Connection connection = DriverManager.getConnection(dbUrl,username,password);
@@ -32,7 +31,7 @@ public class HotelBookingDao {
     private static String HOTEL_ID = new String();
     private static String FROM_DATE = new String();
     private static String TO_DATE = new String();
-    private static String USER_NAME = new String("202@gmail.com");
+    private static String USER_NAME = new String();
     private static int userRewards = 0;
 
     public HotelBookingDao() throws SQLException {
@@ -185,7 +184,7 @@ public class HotelBookingDao {
     public List<Room> fetchRooms(String hotelId) throws SQLException {
         loadOccupiedRoomData(FROM_DATE, TO_DATE, HOTEL_ID);
         List<Room> availableRoomsList = new ArrayList<>();
-        String fetchRoomsQuery = "Select * from room R join Hotel H on R.hotel_id = H.hotel_id where H.hotel_id = ?";
+        String fetchRoomsQuery = "Select * from room R join hotel H on R.hotel_id = H.hotel_id where H.hotel_id = ?";
 
         loadOccupiedRoomData(FROM_DATE, TO_DATE, HOTEL_ID);
 
@@ -198,7 +197,9 @@ public class HotelBookingDao {
         LocalDate localDate = LocalDate.parse(FROM_DATE);
         DayOfWeek dayOfWeek = localDate.getDayOfWeek();
 
-        if(dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
+        boolean isCustomerLoyal = isCustomerLoyal();
+
+        if((dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) && !isCustomerLoyal) {
             dynamicPrice += 10;
         }
 
@@ -269,7 +270,7 @@ public class HotelBookingDao {
 
             preparedStatement.executeUpdate();
 
-            String queryToFetchBookingId = "Select max(booking_id) from Booking";
+            String queryToFetchBookingId = "Select max(booking_id) from booking";
             preparedStatement = connection.prepareStatement(queryToFetchBookingId);
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -306,7 +307,7 @@ public class HotelBookingDao {
     public List<BookingInformation> fetchCustomerHistory(String customerId) throws SQLException {
 
         String fetchCustomerHistoryQuery = "Select R.*, B.hotel_id, B.from_date, B.to_date, B.total_price, H.hotel_name from roomsBooked R join booking B " +
-                                           "on R.booking_id = B.booking_id join hotel h on B.hotel_id = h.hotel_id where B.customer_id = ?;";
+                                           "on R.booking_id = B.booking_id join hotel H on B.hotel_id = H.hotel_id where B.customer_id = ?;";
 
         PreparedStatement preparedStatement = connection.prepareStatement(fetchCustomerHistoryQuery);
         preparedStatement.setString(1, customerId);
@@ -484,6 +485,20 @@ public class HotelBookingDao {
     }
 
 
+    public boolean isCustomerLoyal() throws SQLException {
 
+        String queryToFetchBookingCount = "select count(*) from booking where customer_id = ? group by customer_id";
+
+        PreparedStatement preparedStatement = connection.prepareStatement( queryToFetchBookingCount );
+        preparedStatement.setString(1, USER_NAME);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        int count = 0;
+        if(resultSet.next()) {
+            count = resultSet.getInt(1);
+        }
+
+        return (count == 0 || count % 5 != 0) ? false : true ;
+    }
 
 }
