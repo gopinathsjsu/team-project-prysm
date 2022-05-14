@@ -68,6 +68,8 @@ public class HotelBookingController {
 
     }
 
+
+    //Add new hotel (Admin Action)
     @PostMapping(path = "addHotel",
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public Boolean addHotel(@RequestBody Hotel hotel) throws SQLException {
@@ -130,8 +132,11 @@ public class HotelBookingController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public boolean updateReservation(@RequestBody BookingInformation bookingInformation) throws SQLException {
-        return hotelBookingDao.updateReservation(bookingInformation.getBookingId(), bookingInformation.getFromDate(), bookingInformation.getToDate());
+        return hotelBookingDao.updateReservation(bookingInformation.getBookingId(),
+                                bookingInformation.getFromDate(), bookingInformation.getToDate());
     }
+
+
 
 
 

@@ -4,12 +4,22 @@ public class Booking {
 
     private String room_type;
     private String hotel_id;
+    private String hotel_name;
     private String country;
     private String city;
     private String customer_id;
     private String from_date;
     private String to_date;
     private String booking_id;
+
+
+    public String getHotel_name() {
+        return hotel_name;
+    }
+
+    public void setHotel_name(String hotel_name) {
+        this.hotel_name = hotel_name;
+    }
 
     public String getBooking_id() {
         return booking_id;
@@ -29,7 +39,8 @@ public class Booking {
 
     private int price;
 
-    public Booking(String room_type, String hotel_id, String country, String city, String customer_id, String from_date, String to_date, int price) {
+    public Booking(String room_type, String hotel_id, String country, String city, String customer_id, String from_date,
+                   String to_date, int price, String hotel_name) {
         this.room_type = room_type;
         this.hotel_id = hotel_id;
         this.country = country;
@@ -38,6 +49,7 @@ public class Booking {
         this.from_date = from_date;
         this.to_date = to_date;
         this.price = price;
+        this.hotel_name = hotel_name;
     }
 
     public String getRoom_type() {

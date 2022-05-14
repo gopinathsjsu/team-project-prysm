@@ -49,6 +49,8 @@ public class HotelBookingDao {
         }
         return false;
     }
+
+
     public boolean loginEmployee (String username, String password) throws SQLException {
         String sql = "select * from employee where employee_id = ? and password = ?";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
@@ -62,9 +64,11 @@ public class HotelBookingDao {
         return false;
     }
 
+
     public int getCustomerRewards() {
         return userRewards;
     }
+
 
     public boolean registerUser (String username, String password, String name) throws SQLException {
         String sql = "insert into customer (customer_id,password,customer_name ) values (?,?,?)";
@@ -78,6 +82,7 @@ public class HotelBookingDao {
         }
         return false;
     }
+
 
     public List<Hotel> getHotels() throws SQLException {
         List<Hotel> hotels = new ArrayList<>();
@@ -100,8 +105,11 @@ public class HotelBookingDao {
         }
         return hotels;
     }
+
+
     public boolean addHotel(Hotel hotel) throws SQLException {
-        String queryToAddHotels = "insert into hotel (hotel_id,hotel_name,country,city,daily_continental_breakfast,fitness_room, Swimming_pool, jacuzzi, daily_parking, all_meals ) values (?,?,?,?,?,?,?,?,?,?)";
+        String queryToAddHotels = "insert into hotel (hotel_id,hotel_name,country,city,daily_continental_breakfast,fitness_room, " +
+                "Swimming_pool, jacuzzi, daily_parking, all_meals ) values (?,?,?,?,?,?,?,?,?,?)";
 
         PreparedStatement preparedStatement=connection.prepareStatement(queryToAddHotels);
         preparedStatement.setString(1,hotel.getHotel_id());
@@ -120,7 +128,6 @@ public class HotelBookingDao {
         }
         return false;
     }
-
 
 
     public List<Hotel> fetchHotels(String city, String country, String fromDate,
@@ -161,6 +168,7 @@ public class HotelBookingDao {
         return validHotels;
     }
 
+
     private void loadValidHotels(String fromDate, String toDate, Integer numOfRooms, HashMap<String, Integer> hotelCountMap, List<String> hotelIds) throws SQLException {
         ResultSet resultSet;
         PreparedStatement preparedStatement;
@@ -188,6 +196,7 @@ public class HotelBookingDao {
             }
         }
     }
+
 
     private void loadOccupiedRoomData(String fromDate, String toDate, String hotelId) throws SQLException {
         ResultSet resultSet;
@@ -259,11 +268,13 @@ public class HotelBookingDao {
         return availableRoomsList;
     }
 
+
     public void loadStaticDataToBookRooms(String hotelId, String fromDate, String toDate) {
         HOTEL_ID = hotelId == null ? HOTEL_ID : new String(hotelId);
         FROM_DATE = fromDate == null ? FROM_DATE : new String(fromDate);
         TO_DATE = toDate == null ? TO_DATE : new String(toDate);
     }
+
 
     public int bookRooms(boolean bookWithRewards, List<Room> selectedRooms) {
 
@@ -323,10 +334,11 @@ public class HotelBookingDao {
 
     }
 
+
     public List<BookingInformation> fetchCustomerHistory(String customerId) throws SQLException {
 
-        String fetchCustomerHistoryQuery = "Select R.*, B.hotel_id, B.from_date, B.to_date, B.total_price from roomsBooked R join booking B " +
-                                           "on R.booking_id = B.booking_id where B.customer_id = ?;";
+        String fetchCustomerHistoryQuery = "Select R.*, B.hotel_id, B.from_date, B.to_date, B.total_price, H.hotel_name from roomsBooked R join booking B " +
+                                           "on R.booking_id = B.booking_id join hotel h on B.hotel_id = h.hotel_id where B.customer_id = ?;";
 
         PreparedStatement preparedStatement = connection.prepareStatement(fetchCustomerHistoryQuery);
         preparedStatement.setString(1, customerId);
@@ -339,12 +351,13 @@ public class HotelBookingDao {
                                                 resultSet.getBoolean(7), resultSet.getBoolean(3));
             BookingInformation bookingInformation = new BookingInformation(resultSet.getString(1), resultSet.getString(10),
                                                      resultSet.getString(2), resultSet.getString(11), resultSet.getString(12),
-                                                    resultSet.getInt(13), amenities);
+                                                    resultSet.getInt(13), amenities, resultSet.getString(14));
 
             userBookingInformation.add(bookingInformation);
         }
         return userBookingInformation;
     }
+
 
     private void updateCustomerRewards(String customerId, int rewards) throws SQLException {
 
@@ -370,6 +383,7 @@ public class HotelBookingDao {
         userRewards = customerRewards;
 
     }
+
 
     public boolean cancelReservation(String bookingId) {
 
@@ -410,6 +424,7 @@ public class HotelBookingDao {
         }
         return true;
     }
+
 
     public boolean updateReservation(String bookingId, String fromDateStr, String toDateStr) throws SQLException {
 

@@ -9,8 +9,10 @@ public class BookingInformation {
     private String toDate;
     private int totalPrice;
     private Amenities amenities;
+    private String hotel_name;
 
-    public BookingInformation(String bookingId, String hotelId, String roomType, String fromDate, String toDate, int totalPrice, Amenities amenities) {
+    public BookingInformation(String bookingId, String hotelId, String roomType, String fromDate, String toDate,
+                              int totalPrice, Amenities amenities, String hotel_name) {
         this.bookingId = bookingId;
         this.hotelId = hotelId;
         this.roomType = roomType;
@@ -18,6 +20,15 @@ public class BookingInformation {
         this.toDate = toDate;
         this.totalPrice = totalPrice;
         this.amenities = amenities;
+        this.hotel_name = hotel_name;
+    }
+
+    public String getHotel_name() {
+        return hotel_name;
+    }
+
+    public void setHotel_name(String hotel_name) {
+        this.hotel_name = hotel_name;
     }
 
     public String getBookingId() {
