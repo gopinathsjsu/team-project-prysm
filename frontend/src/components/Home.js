@@ -486,17 +486,19 @@ function Home(props) {
     <>
       <br />
       <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', font:'caption', fontStyle:'oblique'}}>
-        { localStorage.getItem("isEmployeeLoggedIn") === "true" && (<h2>Welcome {localStorage.getItem("EmployeeName")} !</h2> )}
+        <Row className="justify-content-md-center">
+          <Col xs lg="11">
+            { localStorage.getItem("isEmployeeLoggedIn") === "true" && (<h2>Welcome {localStorage.getItem("EmployeeName")} !</h2> )}
 
-        {  localStorage.getItem("isUserLoggedIn") ==  "true"   && (<h2>Welcome {localStorage.getItem("userName")} !</h2> )}
-      </div>
-      <div style = {{display: 'flex',  justifyContent:'right'}}>
-        <StarIcon></StarIcon>
+            {  localStorage.getItem("isUserLoggedIn") ==  "true"   && (<h2>Welcome {localStorage.getItem("userName")} !</h2> )}
+          </Col>
+          <Col xs lg="2">
+            {localStorage.getItem("isLoyal") ==  "true" && (<StarIcon style={{color:'red'}}></StarIcon>) }
+          </Col>
+        </Row>
       </div>
       <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', font:'caption', fontStyle:'oblique'}}>
-        { localStorage.getItem("isUserLoggedIn") === "true" && (<h2>Your Reward Points are {localStorage.getItem("rewardPoints")}</h2> )
-          
-        
+        { localStorage.getItem("isUserLoggedIn") === "true" && (<h2>Your Reward Points are {localStorage.getItem("rewardPoints")}</h2> ) 
         }
       </div>
       { localStorage.getItem("isEmployeeLoggedIn") ==  "false" && 

@@ -5,6 +5,7 @@ const SignOutButton = () => {
       localStorage.setItem("isLoggedIn" , false);
       localStorage.setItem("isEmployeeLoggedIn" , false);
       localStorage.setItem("isUserLoggedIn" , false);
+      localStorage.setItem("isLoyal", false);
       window.location.reload(false);
   }
   return (

@@ -39,20 +39,25 @@ const LoginForm = ({handleCloseLogin}) => {
       // make axios post request
       const response = await axios.post(`${backend}/loginUser`, data);
       const userData = response.data;
+      console.log(userData);
       if(userData.username){
         handleCloseLogin();
         console.log(localStorage);
         localStorage.setItem('userName',userData.name);  
         localStorage.setItem("isLoggedIn" , true);
+        localStorage.setItem("isUserLoggedIn", true);
         localStorage.setItem("isEmployeeLoggedIn" , false);
-        localStorage.setItem("isUserLoggedIn" , true); 
-        
-        localStorage.setItem("rewardPoints", userData.rewards);
+        localStorage.setItem("rewardPoints" , userData.rewards); 
+        console.log(userData.rewards);
+        if(userData.rewards >= 100){
+          localStorage.setItem("isLoyal", true);
+        }
       }else{
         console.log("wrong creds");
         localStorage.setItem("isUserLoggedIn", false);
         localStorage.setItem("isLoggedIn" , false);
         window.alert("Please enter correct login credentials")
+
       }
     } catch (error) {
       console.log(error);
@@ -62,6 +67,8 @@ const LoginForm = ({handleCloseLogin}) => {
 
   //Employee Login API call 
   const handleEmployeeLogin = async (event) => {
+    console.log("employeeLogin");
+
     var data = {
       username: formValue.email,
       password: formValue.password,
