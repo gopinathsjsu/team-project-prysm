@@ -224,7 +224,9 @@ public class HotelBookingDao {
                             resultSet.getBoolean(11), resultSet.getBoolean(12), resultSet.getBoolean(13), resultSet.getBoolean(13));
                     String roomType = resultSet.getString(1);
                     int availableRooms = totalAvailableRoomsMap.getOrDefault(roomType, 0) - occupiedRooms.getOrDefault(roomType, 0);
-
+                    if(availableRooms <= 0) {
+                        continue;
+                    }
                     Room room = new Room(amenities, roomType, availableRooms, resultSet.getInt(4)+dynamicPrice, resultSet.getString(2));
                     availableRoomsList.add(room);
                 }
