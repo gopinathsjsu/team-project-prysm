@@ -39,13 +39,17 @@ const LoginForm = ({handleCloseLogin}) => {
       // make axios post request
       const response = await axios.post(`${backend}/loginUser`, data);
       const userData = response.data;
-      if(userData){
+      if(userData.username){
         handleCloseLogin();
-        localStorage.setItem('userName',data.username);  
+        console.log(localStorage);
+        localStorage.setItem('userName',userData.name);  
         localStorage.setItem("isLoggedIn" , true);
         localStorage.setItem("isEmployeeLoggedIn" , false);
         localStorage.setItem("isUserLoggedIn" , true); 
+        
+        localStorage.setItem("rewardPoints", userData.rewards);
       }else{
+        console.log("wrong creds");
         localStorage.setItem("isUserLoggedIn", false);
         localStorage.setItem("isLoggedIn" , false);
         window.alert("Please enter correct login credentials")
@@ -53,6 +57,7 @@ const LoginForm = ({handleCloseLogin}) => {
     } catch (error) {
       console.log(error);
     }
+    window.location.reload(false);
   };
 
   //Employee Login API call 
@@ -65,15 +70,15 @@ const LoginForm = ({handleCloseLogin}) => {
     try {
       // make axios post request
       const response = await axios.post(`${backend}/loginEmployee`, data);
-      const userData = response.data;
-      console.log(userData);
-      if(userData){
+      const employeeData = response.data;
+      console.log(employeeData);
+      if(employeeData.username){
         handleCloseLogin();
-        localStorage.setItem('userName',userData.username);  
+        localStorage.setItem('userName',employeeData.username);  
         localStorage.setItem("isLoggedIn" , true);
         localStorage.setItem("isEmployeeLoggedIn" , true);
         localStorage.setItem("isUserLoggedIn" , false);
-        localStorage.setItem("EmployeeName" , userData.name);
+        localStorage.setItem("EmployeeName" , employeeData.name);
         console.log(localStorage);     
       }else{
         localStorage.setItem("isEmployeeoggedIn", false);

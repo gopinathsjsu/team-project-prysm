@@ -14,7 +14,7 @@ const SignupForm = () => {
       username: formValue.email,
       name: formValue.name,
       password: formValue.password,
-      rewwards: 10
+      rewards: 10
     };
     console.log(data);
     try {

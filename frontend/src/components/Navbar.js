@@ -29,6 +29,8 @@ function NavBar() {
                   <Nav.Link href="home">Home</Nav.Link>
                 </Col>
                 <Col>
+                {
+                  !flag && (
                     <NavDropdown title="Sign In" id="basic-nav-dropdown">
                       <NavDropdown.Item>
                         <LoginButton />
@@ -37,7 +39,9 @@ function NavBar() {
                       <NavDropdown.Item>
                         <SignUpButton />
                       </NavDropdown.Item>
-                  </NavDropdown>
+                   </NavDropdown>
+                  )
+                }
                 </Col>
                 <Col>
                    {flag && <SignOutButton />}
