@@ -1,5 +1,6 @@
 package com.cmpe202.prysm.dao;
 
+import com.cmpe202.prysm.holidays.PublicHolidays;
 import com.cmpe202.prysm.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,7 +141,6 @@ public class HotelBookingDao {
         }
         return false;
     }
-
 
 
     public List<Hotel> fetchHotels(String city, String country, String fromDate,
@@ -291,6 +291,9 @@ public class HotelBookingDao {
 
     public int bookRooms(boolean bookWithRewards, List<Room> selectedRooms) {
 
+        PublicHolidays publicHolidays = PublicHolidays.getInstance();
+        List<String> publicHolidaysList = publicHolidays.publicHolidaysList;
+
         //write into booking table with count of rooms booked and from and to date
         int totalPrice = 0;
         int totalRooms = 0;
@@ -302,6 +305,10 @@ public class HotelBookingDao {
         if(bookWithRewards) {
             totalPrice -= userRewards;
         }
+        if(publicHolidaysList.contains(FROM_DATE)) {
+            totalPrice += 50;
+        }
+
         try {
             String queryToInsertInBooking = "Insert into booking values (NULL, ?, ? , ? , ?, ?, ? )";
             PreparedStatement preparedStatement = connection.prepareStatement(queryToInsertInBooking);
@@ -311,6 +318,8 @@ public class HotelBookingDao {
             preparedStatement.setString(4, TO_DATE);
             preparedStatement.setInt(5, totalRooms);
             preparedStatement.setInt(6, totalPrice);
+
+
 
             preparedStatement.executeUpdate();
 
@@ -527,4 +536,21 @@ public class HotelBookingDao {
 
         return false;
     }
+
+
+
+
+
+//    public String getEmployeeName(String username) throws SQLException {
+//        String employeeName = "";
+//        String sql = "select employee_name from employee where employee_id = ?";
+//
+//        PreparedStatement preparedStatement=connection.prepareStatement(sql);
+//        preparedStatement.setString(1,username);
+//        ResultSet resultSet= preparedStatement.executeQuery();
+//        if(resultSet.next()){
+//            employeeName = resultSet.getString(1);
+//        }
+//        return employeeName;
+//    }
 }
