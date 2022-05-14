@@ -24,14 +24,12 @@ public class HotelBookingController {
 
     //User Login
     @PostMapping(path = "loginUser")
-    public String loginUser(@RequestBody Customer customer) throws SQLException {
+    public boolean loginUser(@RequestBody Customer customer) throws SQLException {
         //fetch from DB and check if user exists
-        logger.info("here");
         if(hotelBookingDao.loginUser(customer.getUsername(), customer.getPassword())) {
-            return "Success";
+            return true;
         }
-
-        return "Fail";
+        return false;
     }
 
 
@@ -39,7 +37,6 @@ public class HotelBookingController {
     @PostMapping(path = "loginEmployee")
     public String loginEmployee(@RequestBody Employee employee) throws SQLException {
         //fetch from DB and check if employee exists
-        logger.info("here");
         if(hotelBookingDao.loginEmployee(employee.getUsername(), employee.getPassword()))
             return "Success";
 
@@ -53,7 +50,6 @@ public class HotelBookingController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Boolean registerUser(@RequestBody Customer customer) throws SQLException {
         //check if all the required information is provided by the user and register User
-        logger.info("here in in register");
         if(hotelBookingDao.registerUser(customer.getUsername(), customer.getPassword(), customer.getName())){
             return true;
         }
@@ -80,7 +76,6 @@ public class HotelBookingController {
     }
 
 
-
     //Search for Rooms in Hotel
     @GetMapping(path = "fetchRooms/",
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -94,7 +89,10 @@ public class HotelBookingController {
     public List<BookingInformation> fetchCustomerHistory(@RequestParam String customerId) throws SQLException{
         return hotelBookingDao.fetchCustomerHistory(customerId);
     }
-    @GetMapping(path = "/getHotels",
+
+
+    //Fetch all available Hotels
+    @GetMapping(path = "getHotels",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Hotel> getHotels() throws SQLException {
         return hotelBookingDao.getHotels();
@@ -109,6 +107,7 @@ public class HotelBookingController {
         return hotelBookingDao.bookRooms(bookWithRewards.isBookWithRewards(), bookWithRewards.getSelectedRooms());
     }
 
+
     //Cancel Reservation
     @PostMapping(path = "cancelReservation",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -119,11 +118,23 @@ public class HotelBookingController {
 
 
     //Get Customer Rewards
-    @GetMapping(path = "/getCustomerRewards",
+    @GetMapping(path = "getCustomerRewards",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public int getCustomerRewards() throws SQLException {
         return hotelBookingDao.getCustomerRewards();
     }
+
+
+    //Update Reservation
+    @PostMapping(path = "/updateReservation",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public boolean updateReservation(@RequestBody BookingInformation bookingInformation) throws SQLException {
+        return hotelBookingDao.updateReservation(bookingInformation.getBookingId(), bookingInformation.getFromDate(), bookingInformation.getToDate());
+    }
+
+
+
 
 
 }

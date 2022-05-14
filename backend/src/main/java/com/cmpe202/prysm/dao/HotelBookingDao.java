@@ -36,7 +36,7 @@ public class HotelBookingDao {
     }
 
 
-    public Boolean loginUser (String username, String password) throws SQLException {
+    public boolean loginUser (String username, String password) throws SQLException {
         String sql = "select * from customer where customer_id = ? and password = ?";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
         preparedStatement.setString(1,username);
@@ -66,7 +66,7 @@ public class HotelBookingDao {
         return userRewards;
     }
 
-    public Boolean registerUser (String username, String password, String name) throws SQLException {
+    public boolean registerUser (String username, String password, String name) throws SQLException {
         String sql = "insert into customer (customer_id,password,customer_name ) values (?,?,?)";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
         preparedStatement.setString(1,username);
@@ -101,9 +101,9 @@ public class HotelBookingDao {
         return hotels;
     }
     public boolean addHotel(Hotel hotel) throws SQLException {
-        String sql = "insert into hotel (hotel_id,hotel_name,country,city,daily_continental_breakfast,fitness_room, Swimming_pool, jacuzzi, daily_parking, all_meals ) values (?,?,?,?,?,?,?,?,?,?)";
+        String queryToAddHotels = "insert into hotel (hotel_id,hotel_name,country,city,daily_continental_breakfast,fitness_room, Swimming_pool, jacuzzi, daily_parking, all_meals ) values (?,?,?,?,?,?,?,?,?,?)";
 
-        PreparedStatement preparedStatement=connection.prepareStatement(sql);
+        PreparedStatement preparedStatement=connection.prepareStatement(queryToAddHotels);
         preparedStatement.setString(1,hotel.getHotel_id());
         preparedStatement.setString(2,hotel.getHotel_name());
         preparedStatement.setString(3,hotel.getCountry());
@@ -268,7 +268,6 @@ public class HotelBookingDao {
     public int bookRooms(boolean bookWithRewards, List<Room> selectedRooms) {
 
         //write into booking table with count of rooms booked and from and to date
-        //INSERT INTO booking VALUES (NULL,"prashanth@gmail.com","1236", '2022-05-11', '2022-05-14', 1, 200);
         int totalPrice = 0;
         int totalRooms = 0;
         int bookingId = 0;
@@ -410,6 +409,95 @@ public class HotelBookingDao {
             return false;
         }
         return true;
+    }
+
+    public boolean updateReservation(String bookingId, String fromDateStr, String toDateStr) throws SQLException {
+
+        String queryToFetchBookingInformation = "Select from_date, to_date, hotel_id from booking where booking_id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(queryToFetchBookingInformation);
+        preparedStatement.setString(1, bookingId);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        while(resultSet.next()) {
+            String bookingStartDateStr = resultSet.getString(1);
+            String bookingEndDateStr = resultSet.getString(2);
+            String hotelId = resultSet.getString(3);
+
+            LocalDate currentDate = LocalDate.now(ZoneId.of( "America/Montreal" ));
+            LocalDate bookingStartDate = LocalDate.parse(bookingStartDateStr);
+            LocalDate bookingEndDate = LocalDate.parse(bookingEndDateStr);
+
+            if(currentDate.isAfter(bookingEndDate) || currentDate.isAfter(bookingStartDate)) {
+                return false;
+            }
+
+            LocalDate fromDate = LocalDate.parse(fromDateStr);
+
+            if(fromDate.isBefore(currentDate)) {
+                return false;
+            }
+
+            return updateBooking(hotelId, bookingId, fromDateStr, toDateStr);
+
+        }
+        return false;
+    }
+
+
+    public boolean updateBooking(String hotelId, String bookingId, String fromDate, String toDate) throws SQLException {
+
+        //formulate existing room booking information from rooms booked table in Map
+        Map<String, Integer> roomsMap = new HashMap<>();
+        String queryToFetchRoomsBooked = "Select room_type, count_of_rooms from roomsBooked where booking_id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(queryToFetchRoomsBooked);
+        preparedStatement.setString(1, bookingId);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        while (resultSet.next()) {
+            roomsMap.put(resultSet.getString(1), resultSet.getInt(2));
+        }
+
+        HOTEL_ID = hotelId;
+        FROM_DATE = fromDate;
+        TO_DATE = toDate;
+
+        //find availability of the rooms obtained from map for new dates
+        List<Room> availableRooms = fetchRooms(hotelId);
+        Map<String, Integer> availableRoomMap = new HashMap<>();
+        for(Room room : availableRooms) {
+
+            //extract the map and find if we have enough available room types to reschedule
+            String roomType = room.getRoom_type();
+            int roomCount = room.getCount_of_rooms();
+            availableRoomMap.put(roomType, availableRoomMap.getOrDefault(roomType, 0) + roomCount);
+
+        }
+
+        boolean isPossible = true;
+
+        for(String roomType : roomsMap.keySet()) {
+            if(availableRoomMap.getOrDefault(roomType, 0 ) < roomsMap.get(roomType)) {
+                isPossible = false;
+                break;
+            }
+        }
+
+        if(isPossible) {
+            String updateBookingInformation = "Update booking set from_date = ?, to_date = ? where booking_id = ?";
+
+            preparedStatement = connection.prepareStatement(updateBookingInformation);
+            preparedStatement.setString(1, fromDate);
+            preparedStatement.setString(2, toDate);
+            preparedStatement.setString(3, bookingId);
+
+            preparedStatement.executeUpdate();
+
+            return true;
+        }
+
+        return false;
     }
 
 
