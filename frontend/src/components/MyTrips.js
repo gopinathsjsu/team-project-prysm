@@ -40,7 +40,8 @@ export const MyTrips = () => {
   const [showToastFailed, setShowToastFailed] = useState(false);
   React.useEffect(() => {
     let fetchData = async () => {
-      let customerID = localStorage.getItem("UserName");
+      let customerID = localStorage.getItem("userName");
+      console.log(customerID);
       const response = await axios.get(`${backend}/fetchCustomerHistory/`, {
         params: { customerId: customerID },
       });
@@ -71,6 +72,8 @@ export const MyTrips = () => {
     const response = await axios.post(`${backend}/updateReservation`, data);
     console.log(response);
     if (response.data) {
+      window.location.href = "/myTrips";
+      setTimeout(() => {}, 1000);
       setShowModal(false);
       setShowToast(true);
     } else {
@@ -87,8 +90,8 @@ export const MyTrips = () => {
       const response = await axios.post(`${backend}/cancelReservation`, data);
       console.log(response);
       if (response.data) {
-        window.location.href = "/myTrips";
         setShowToast(true);
+        window.location.href = "/myTrips";
       } else {
         setShowToastFailed(true);
       }
@@ -106,14 +109,14 @@ export const MyTrips = () => {
                   <Card.Img src="Image" style={styles.cardImage} />
                 </Col>
                 <Col>
-                  <Card.Header as="h3">{data.hotelId}</Card.Header>
+                  <Card.Header as="h3">{data.hotel_name}</Card.Header>
                   <Card.Body>
                     <Card.Title as="h3"></Card.Title>
                     <Table>
                       <tbody>
                         <tr>
                           <td>Room type : {data.roomType}</td>
-                          <td> Price : {data.totalPrice}</td>
+                          <td> Price : {data.totalPrice} $</td>
                           <td> </td>
                         </tr>
                         <tr>
