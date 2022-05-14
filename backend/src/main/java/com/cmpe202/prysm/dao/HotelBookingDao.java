@@ -141,7 +141,7 @@ public class HotelBookingDao {
 
                 if(value - roomsOccupied >= numOfRooms){
                     hotelIds.add(hotelId);
-                    loadOccupiedRoomData(fromDate, toDate, hotelId);
+                    //    loadOccupiedRoomData(fromDate, toDate, hotelId);
                 }
             }
         }
@@ -153,7 +153,7 @@ public class HotelBookingDao {
         PreparedStatement preparedStatement;
         List<String> bookingIds = new ArrayList<>();
         //fetch booking Id from booking for booked room
-        String queryToFetchBookingIds = "Select booking_id from booking where hotel_id = ? and (? between from_date and to_date) or (? between from_date and to_date)";
+        String queryToFetchBookingIds = "Select booking_id from booking where hotel_id = ? and ((? between from_date and to_date) or (? between from_date and to_date))";
         preparedStatement = connection.prepareStatement(queryToFetchBookingIds);
         preparedStatement.setString(1, hotelId);
         preparedStatement.setString(2, fromDate);
@@ -182,7 +182,7 @@ public class HotelBookingDao {
 
 
     public List<Room> fetchRooms(String hotelId) throws SQLException {
-        loadOccupiedRoomData(FROM_DATE, TO_DATE, HOTEL_ID);
+        HOTEL_ID = hotelId;
         List<Room> availableRoomsList = new ArrayList<>();
         String fetchRoomsQuery = "Select * from room R join hotel H on R.hotel_id = H.hotel_id where H.hotel_id = ?";
 
@@ -224,11 +224,10 @@ public class HotelBookingDao {
                             resultSet.getBoolean(11), resultSet.getBoolean(12), resultSet.getBoolean(13), resultSet.getBoolean(13));
                     String roomType = resultSet.getString(1);
                     int availableRooms = totalAvailableRoomsMap.getOrDefault(roomType, 0) - occupiedRooms.getOrDefault(roomType, 0);
-                    if(availableRooms <= 0) {
-                        continue;
+                    if(availableRooms > 0) {
+                        Room room = new Room(amenities, roomType, availableRooms, resultSet.getInt(4)+dynamicPrice, resultSet.getString(2));
+                        availableRoomsList.add(room);
                     }
-                    Room room = new Room(amenities, roomType, availableRooms, resultSet.getInt(4)+dynamicPrice, resultSet.getString(2));
-                    availableRoomsList.add(room);
                 }
             }
         }
