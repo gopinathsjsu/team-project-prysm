@@ -510,7 +510,7 @@ function Home(props) {
         )}
 
         {localStorage.getItem("isUserLoggedIn") == "true" && (
-          <h2>Welcome {localStorage.getItem("userName")} !</h2>
+          <h2>Welcome {localStorage.getItem("Name")} !</h2>
         )}
       </div>
       <div

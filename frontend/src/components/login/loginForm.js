@@ -43,7 +43,8 @@ const LoginForm = ({handleCloseLogin}) => {
       if(userData.username){
         handleCloseLogin();
         console.log(localStorage);
-        localStorage.setItem('userName',userData.name);  
+        localStorage.setItem('userName',userData.username);  
+        localStorage.setItem('Name',userData.name);  
         localStorage.setItem("isLoggedIn" , true);
         localStorage.setItem("isUserLoggedIn", true);
         localStorage.setItem("isEmployeeLoggedIn" , false);
