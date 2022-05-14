@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import { backend } from "./config";
 import DatePicker from "react-datepicker";
+import DoneAllRoundedIcon from "@mui/icons-material/DoneAllRounded";
+import SmsFailedIcon from "@mui/icons-material/SmsFailed";
+import { pink } from "@mui/material/colors";
 import {
   Table,
   Container,
@@ -11,6 +14,8 @@ import {
   Col,
   Button,
   Modal,
+  ToastContainer,
+  Toast,
 } from "react-bootstrap";
 const styles = {
   card: {
@@ -30,9 +35,12 @@ export const MyTrips = () => {
   const [showModal, setShowModal] = useState(false);
   const [checkInDate, setCheckInDate] = useState(null);
   const [checkOutDate, setCheckOutDate] = useState(null);
+  const [showToast, setShowToast] = useState(false);
+  const [bookingId, setBookingId] = useState("");
+  const [showToastFailed, setShowToastFailed] = useState(false);
   React.useEffect(() => {
     let fetchData = async () => {
-      let customerID = "202@gmail.com";
+      let customerID = localStorage.getItem("UserName");
       const response = await axios.get(`${backend}/fetchCustomerHistory/`, {
         params: { customerId: customerID },
       });
@@ -42,8 +50,9 @@ export const MyTrips = () => {
     fetchData();
   }, []);
   const handleCloseModal = () => setShowModal(false);
-  const handleUpdateBooking = () => {
+  const handleUpdateBooking = (bookingId) => {
     setShowModal(true);
+    setBookingId(bookingId);
   };
   const handleCheckInDate = (date) => {
     setCheckInDate(date);
@@ -51,6 +60,39 @@ export const MyTrips = () => {
   };
   const handleCheckOutDate = (date) => {
     setCheckOutDate(date);
+  };
+  const handleSaveChanges = async () => {
+    var data = {
+      bookingId: bookingId,
+      fromDate: checkInDate.toISOString().substring(0, 10),
+      toDate: checkOutDate.toISOString().substring(0, 10),
+    };
+    console.log(data);
+    const response = await axios.post(`${backend}/updateReservation`, data);
+    console.log(response);
+    if (response.data) {
+      setShowModal(false);
+      setShowToast(true);
+    } else {
+      setShowModal(false);
+      setShowToastFailed(true);
+    }
+  };
+  const handleCancel = async (bookingId) => {
+    console.log(bookingId);
+    var data = {
+      booking_id: bookingId,
+    };
+    try {
+      const response = await axios.post(`${backend}/cancelReservation`, data);
+      console.log(response);
+      if (response.data) {
+        window.location.href = "/myTrips";
+        setShowToast(true);
+      } else {
+        setShowToastFailed(true);
+      }
+    } catch (error) {}
   };
   let responseData;
   if (tripData) {
@@ -85,14 +127,21 @@ export const MyTrips = () => {
                   </Card.Body>
                   <Button
                     variant="outline-primary"
-                    onClick={handleUpdateBooking}
+                    onClick={() => {
+                      handleUpdateBooking(data.bookingId);
+                    }}
                   >
                     Update Booking
                   </Button>
                   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
                   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                   &nbsp; &nbsp;&nbsp;
-                  <Button variant="outline-danger">Cancel Booking</Button>
+                  <Button
+                    variant="outline-danger"
+                    onClick={() => handleCancel(data.bookingId)}
+                  >
+                    Cancel Booking
+                  </Button>
                 </Col>
               </Row>
             </Card>
@@ -135,11 +184,41 @@ export const MyTrips = () => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline-primary" size="md">
+          <Button
+            variant="outline-primary"
+            size="md"
+            onClick={handleSaveChanges}
+          >
             Save Changes
           </Button>
         </Modal.Footer>
       </Modal>
+      <ToastContainer className="p-3" position="top-end">
+        <Toast
+          onClose={() => setShowToast(false)}
+          show={showToast}
+          delay={3000}
+          autohide
+        >
+          <Toast.Body>
+            <DoneAllRoundedIcon color="success" />
+            Operation Successful!
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
+      <ToastContainer className="p-3" position="top-end">
+        <Toast
+          onClose={() => setShowToastFailed(false)}
+          show={showToastFailed}
+          delay={3000}
+          autohide
+        >
+          <Toast.Body>
+            <SmsFailedIcon sx={{ color: pink[500] }} /> Failed! Cannot change or
+            cancel past/present dates booking!
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
     </>
   );
 };

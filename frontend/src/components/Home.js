@@ -18,6 +18,8 @@ import roomImage from "./Room1.jpg";
 
 import { MDBInput } from "mdbreact";
 import {Alert} from 'react-bootstrap';
+import { MDBIcon } from "mdbreact";
+
 import CountrySelect from "./search/CountrySelect";
 import CitySelect from "./search/CitySelect";
 import "./Home.css";
@@ -217,19 +219,27 @@ function Home(props) {
         hotel_id: hotelData.hotel_id,
       },
     ];
+
     console.log(JSON.stringify(data) + "Ye hai data");
     setShowModal(false);
+    let xData = [];
+    xData = data.selectedRooms;
+    console.log(JSON.stringify(xData));
+    let sendData = {
+      bookWithRewards: 0,
+      selectedRooms: [],
+    };
 
-    let sendData = [];
     if (singleRoom) {
-      sendData.push(data[0]);
+      sendData.selectedRooms.push(data[0]);
     }
     if (doubleRoom) {
-      sendData.push(data[1]);
+      sendData.selectedRooms.push(data[1]);
     }
     if (suiteRoom) {
-      sendData.push(data[2]);
+      sendData.selectedRooms.push(data[2]);
     }
+
     console.log(JSON.stringify(sendData) + "Send");
     setSingleRoom(false);
     setDoubleRoom(false);
@@ -249,8 +259,8 @@ function Home(props) {
   };
 
   const fetchRooms = async (hotelID) => {
-    if(localStorage.getItem("isUserLoggedIn") === 'false'){
-      window.alert('Please login to view the rooms')
+    if (localStorage.getItem("isUserLoggedIn") === "false") {
+      window.alert("Please login to view the rooms");
       return;
     }
     try {
@@ -298,12 +308,13 @@ function Home(props) {
                         <tr>
                           <td>{room.room_type + " "} Room</td>
                           {room.room_type === "single" ? (
-                            <td>{roompriceRedux.SINGLE_BEDROOM} </td>
+                            <td>{roompriceRedux.SINGLE_BEDROOM} $ </td>
                           ) : room.room_type === "double" ? (
-                            <td>{roompriceRedux.DOUBLE_BEDROOM} </td>
+                            <td>{roompriceRedux.DOUBLE_BEDROOM} $</td>
                           ) : (
-                            <td>{roompriceRedux.SUITE_BEDROOM} </td>
+                            <td>{roompriceRedux.SUITE_BEDROOM} $</td>
                           )}
+
                           <td>
                             <label>Rooms</label>
                             <MDBInput
@@ -485,21 +496,35 @@ function Home(props) {
   return (
     <>
       <br />
-      <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', font:'caption', fontStyle:'oblique'}}>
-        <Row className="justify-content-md-center">
-          <Col xs lg="11">
-            { localStorage.getItem("isEmployeeLoggedIn") === "true" && (<h2>Welcome {localStorage.getItem("EmployeeName")} !</h2> )}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          font: "caption",
+          fontStyle: "oblique",
+        }}
+      >
+        {localStorage.getItem("isEmployeeLoggedIn") === "true" && (
+          <h2>Welcome {localStorage.getItem("EmployeeName")} !</h2>
+        )}
 
-            {  localStorage.getItem("isUserLoggedIn") ==  "true"   && (<h2>Welcome {localStorage.getItem("userName")} !</h2> )}
-          </Col>
-          <Col xs lg="2">
-            {localStorage.getItem("isLoyal") ==  "true" && (<StarIcon style={{color:'red'}}></StarIcon>) }
-          </Col>
-        </Row>
+        {localStorage.getItem("isUserLoggedIn") == "true" && (
+          <h2>Welcome {localStorage.getItem("userName")} !</h2>
+        )}
       </div>
-      <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', font:'caption', fontStyle:'oblique'}}>
-        { localStorage.getItem("isUserLoggedIn") === "true" && (<h2>Your Reward Points are {localStorage.getItem("rewardPoints")}</h2> ) 
-        }
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          font: "caption",
+          fontStyle: "oblique",
+        }}
+      >
+        {localStorage.getItem("isUserLoggedIn") === "true" && (
+          <h2>Your Reward Points are {localStorage.getItem("rewardPoints")}</h2>
+        )}
       </div>
       { localStorage.getItem("isEmployeeLoggedIn") ==  "false" && 
         (
@@ -526,7 +551,7 @@ function Home(props) {
           <Modal.Title aria-labelledby="contained-modal-title-vcenter" centered>
             Room Selection{" "}
             <span style={{ textAlign: "right" }}>
-              Total Price : {totalPrice}{" "}
+              Total Price : {totalPrice} $
             </span>
           </Modal.Title>
         </Modal.Header>
