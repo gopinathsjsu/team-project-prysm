@@ -234,6 +234,10 @@ function Home(props) {
   };
 
   const fetchRooms = async (hotelID) => {
+    if(localStorage.getItem("isUserLoggedIn") === 'false'){
+      window.alert('Please login to view the rooms')
+      return;
+    }
     try {
       const response = await axios.get(`${backend}/fetchRooms/`, {
         params: { hotel_id: hotelID },
@@ -466,6 +470,12 @@ function Home(props) {
   return (
     <>
       <br />
+      <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', font:'caption', fontStyle:'oblique'}}>
+        { localStorage.getItem("isEmployeeLoggedIn") === "true" && (<h2>Welcome {localStorage.getItem("EmployeeName")} !</h2> )}
+
+        {  localStorage.getItem("isUserLoggedIn") ==  "true"   && (<h2>Welcome {localStorage.getItem("UserName")} !</h2> )}
+        
+      </div>
       <Card className="m-5 border-0 shadow" style={styles.card}>
         <Card.Body className="rowC">
           {" "}

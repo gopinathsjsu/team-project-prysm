@@ -2,7 +2,7 @@ import { React, useEffect, useState } from "react";
 
 import "../styles/Header.css";
 
-import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { Container, Nav, Navbar, NavDropdown, Row, Col } from "react-bootstrap";
 import LoginButton from "./login/loginModal";
 import SignUpButton from "./signup/SignUpModal";
 import SignOutButton from "./signOut/SignOutButton";
@@ -24,20 +24,28 @@ function NavBar() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              <Nav.Link href="home">Home</Nav.Link>
-              <NavDropdown title="Sign In" id="basic-nav-dropdown">
-                <NavDropdown.Item>
-                  <LoginButton />
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item>
-                  <SignUpButton />
-                </NavDropdown.Item>
-              </NavDropdown>
-
-              {/* <Nav.Link href="/Link">Sign out</Nav.Link> */}
-              {flag && <SignOutButton />}
-              <Nav.Link href="myTrips">My Trips</Nav.Link>
+              <Row xs={'auto'}>
+                <Col>
+                  <Nav.Link href="home">Home</Nav.Link>
+                </Col>
+                <Col>
+                    <NavDropdown title="Sign In" id="basic-nav-dropdown">
+                      <NavDropdown.Item>
+                        <LoginButton />
+                      </NavDropdown.Item>
+                      <NavDropdown.Divider />
+                      <NavDropdown.Item>
+                        <SignUpButton />
+                      </NavDropdown.Item>
+                  </NavDropdown>
+                </Col>
+                <Col>
+                   {flag && <SignOutButton />}
+                </Col>
+                <Col>
+                   {flag &&  <Nav.Link href="myTrips">My Trips</Nav.Link>}
+                </Col>
+            </Row>
             </Nav>
           </Navbar.Collapse>
         </Container>

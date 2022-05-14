@@ -65,12 +65,15 @@ const LoginForm = ({handleCloseLogin}) => {
     try {
       // make axios post request
       const response = await axios.post(`${backend}/loginEmployee`, data);
-      if(response.data === 'Success'){
+      const userData = response.data;
+      console.log(userData);
+      if(userData){
         handleCloseLogin();
-        localStorage.setItem('userName',data.username);  
+        localStorage.setItem('userName',userData.username);  
         localStorage.setItem("isLoggedIn" , true);
         localStorage.setItem("isEmployeeLoggedIn" , true);
         localStorage.setItem("isUserLoggedIn" , false);
+        localStorage.setItem("EmployeeName" , userData.name);
         console.log(localStorage);     
       }else{
         localStorage.setItem("isEmployeeoggedIn", false);

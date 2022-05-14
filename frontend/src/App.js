@@ -4,6 +4,7 @@ import AdminPage from "./components/login/AdminPage";
 import LoginForm from "./components/login/loginForm";
 import { MyTrips } from "./components/MyTrips";
 import Navbar from "./components/Navbar";
+import SignOutButton from "./components/signOut/SignOutButton";
 function App() {
   
   return (

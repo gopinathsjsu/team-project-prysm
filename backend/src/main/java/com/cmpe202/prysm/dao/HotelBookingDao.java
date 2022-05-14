@@ -49,20 +49,22 @@ public class HotelBookingDao {
         }
         return false;
     }
-
-
-    public boolean loginEmployee (String username, String password) throws SQLException {
+    public Employee loginEmployee (String username, String password) throws SQLException {
         String sql = "select * from employee where employee_id = ? and password = ?";
+        Employee employee = new Employee();
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
         preparedStatement.setString(1,username);
         preparedStatement.setString(2,password);
         ResultSet resultSet= preparedStatement.executeQuery();
 
         if (resultSet.next()){
-            return true;
+           employee.setUsername(resultSet.getString(1));
+           employee.setPassword(resultSet.getString(3));
+           employee.setName(resultSet.getString(4));
         }
-        return false;
+        return  employee;
     }
+
 
 
     public int getCustomerRewards() {
@@ -128,6 +130,7 @@ public class HotelBookingDao {
         }
         return false;
     }
+
 
 
     public List<Hotel> fetchHotels(String city, String country, String fromDate,
@@ -516,4 +519,16 @@ public class HotelBookingDao {
     }
 
 
+//    public String getEmployeeName(String username) throws SQLException {
+//        String employeeName = "";
+//        String sql = "select employee_name from employee where employee_id = ?";
+//
+//        PreparedStatement preparedStatement=connection.prepareStatement(sql);
+//        preparedStatement.setString(1,username);
+//        ResultSet resultSet= preparedStatement.executeQuery();
+//        if(resultSet.next()){
+//            employeeName = resultSet.getString(1);
+//        }
+//        return employeeName;
+//    }
 }
