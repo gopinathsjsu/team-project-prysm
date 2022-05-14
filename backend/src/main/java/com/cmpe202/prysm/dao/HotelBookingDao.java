@@ -36,19 +36,25 @@ public class HotelBookingDao {
     }
 
 
-    public boolean loginUser (String username, String password) throws SQLException {
+    public Customer loginUser (String username, String password) throws SQLException {
         String sql = "select * from customer where customer_id = ? and password = ?";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
         preparedStatement.setString(1,username);
         preparedStatement.setString(2,password);
+
+        Customer customer = new Customer();
+
         ResultSet resultSet= preparedStatement.executeQuery();
+
         if (resultSet.next()){
+            customer = new Customer(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3), resultSet.getInt(4));
             userRewards = resultSet.getInt(4);
             USER_NAME = new String(username);
-            return true;
         }
-        return false;
+        return customer;
     }
+
+
     public Employee loginEmployee (String username, String password) throws SQLException {
         String sql = "select * from employee where employee_id = ? and password = ?";
         Employee employee = new Employee();

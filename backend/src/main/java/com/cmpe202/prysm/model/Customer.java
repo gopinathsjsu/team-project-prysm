@@ -3,15 +3,18 @@ package com.cmpe202.prysm.model;
 public class Customer {
 
     private String username;
-
     private String password;
-
     private String name;
+    private int rewards;
 
-    public Customer(String username, String password, String name) {
+    public Customer() {
+    }
+
+    public Customer(String username, String password, String name, int rewards) {
         this.username = username;
         this.password = password;
         this.name = name;
+        this.rewards = rewards;
     }
 
     public String getUsername() {
@@ -36,5 +39,13 @@ public class Customer {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getRewards() {
+        return rewards;
+    }
+
+    public void setRewards(int rewards) {
+        this.rewards = rewards;
     }
 }

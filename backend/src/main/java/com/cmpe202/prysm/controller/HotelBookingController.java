@@ -24,12 +24,9 @@ public class HotelBookingController {
 
     //User Login
     @PostMapping(path = "loginUser")
-    public boolean loginUser(@RequestBody Customer customer) throws SQLException {
+    public Customer loginUser(@RequestBody Customer customer) throws SQLException {
         //fetch from DB and check if user exists
-        if(hotelBookingDao.loginUser(customer.getUsername(), customer.getPassword())) {
-            return true;
-        }
-        return false;
+        return hotelBookingDao.loginUser(customer.getUsername(), customer.getPassword());
     }
 
 
