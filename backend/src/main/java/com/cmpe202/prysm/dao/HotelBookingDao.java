@@ -249,7 +249,7 @@ public class HotelBookingDao {
         int totalRooms = 0;
         int bookingId = 0;
         for(Room room : selectedRooms) {
-            totalPrice += room.getPrice() * room.getCount_of_rooms();
+            totalPrice += room.getPrice();
             totalRooms += room.getCount_of_rooms();
         }
         if(bookWithRewards) {
