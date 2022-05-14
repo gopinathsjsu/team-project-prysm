@@ -23,6 +23,7 @@ import CitySelect from "./search/CitySelect";
 import "./Home.css";
 import FromDate from "./search/FromDatePicker";
 import { pink } from "@mui/material/colors";
+import StarIcon from '@mui/icons-material/Star';
 import { connect } from "react-redux";
 import axios from "axios";
 import { backend } from "./config";
@@ -134,6 +135,7 @@ function Home(props) {
     return diffInTime / (1000 * 3600 * 24);
 
   }
+  //Do not allow to book rooms if the duration is more than 7 days 
   const handleOnClick = async () => {
      if( getDateDifference() > 7){
        return(
@@ -488,8 +490,14 @@ function Home(props) {
 
         {  localStorage.getItem("isUserLoggedIn") ==  "true"   && (<h2>Welcome {localStorage.getItem("userName")} !</h2> )}
       </div>
+      <div style = {{display: 'flex',  justifyContent:'right'}}>
+        <StarIcon></StarIcon>
+      </div>
       <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', font:'caption', fontStyle:'oblique'}}>
-        { localStorage.getItem("isUserLoggedIn") === "true" && (<h2>Your Reward Points are {localStorage.getItem("rewardPoints")}</h2> )}
+        { localStorage.getItem("isUserLoggedIn") === "true" && (<h2>Your Reward Points are {localStorage.getItem("rewardPoints")}</h2> )
+          
+        
+        }
       </div>
       { localStorage.getItem("isEmployeeLoggedIn") ==  "false" && 
         (
