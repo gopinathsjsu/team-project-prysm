@@ -20,7 +20,7 @@ function NavBar() {
     <div>
       <Navbar bg="dark" variant="dark" expand="sm">
         <Container fluid>
-          <Navbar.Brand href="#home">PRYSM HOTELS</Navbar.Brand>
+          <Navbar.Brand href="/home">PRYSM HOTELS</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">

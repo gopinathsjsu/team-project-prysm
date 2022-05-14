@@ -18,12 +18,12 @@ function SignUpButton() {
       <Modal show={showSignUp} onHide={handleCloseSignUp}>
         <Modal.Header closeButton>
           <Modal.Title>
-            Login
+            Sign Up
             <div id="registerButton"></div>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <SignUpForm />
+          <SignUpForm handleCloseSignUp = {handleCloseSignUp}/>
         </Modal.Body>
       </Modal>
     </>

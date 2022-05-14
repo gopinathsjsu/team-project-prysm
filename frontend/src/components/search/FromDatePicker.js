@@ -22,6 +22,8 @@ function FromDatePicker() {
 
   dispatch(fromGuests(numOfGuests));
   dispatch(fromRooms(numOfRooms));
+   
+
 
   const handleCheckInDate = (date) => {
     setCheckInDate(date);
@@ -78,7 +80,7 @@ function FromDatePicker() {
         </div>
         <div>
           <label>Check-out</label>
-          <DatePicker
+          <DatePicker 
             selected={checkOutDate}
             minDate={checkInDate}
             onChange={handleCheckOutDate}

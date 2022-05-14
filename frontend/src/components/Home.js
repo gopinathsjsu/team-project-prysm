@@ -17,7 +17,7 @@ import {
 import roomImage from "./Room1.jpg";
 
 import { MDBInput } from "mdbreact";
-
+import {Alert} from 'react-bootstrap';
 import CountrySelect from "./search/CountrySelect";
 import CitySelect from "./search/CitySelect";
 import "./Home.css";
@@ -126,7 +126,20 @@ function Home(props) {
       setSuiteRoom(false);
     }
   };
+
+  const getDateDifference = ()=>{
+    let startDate = searchReduxData.FROM_DATE;
+    let endDate = searchReduxData.TO_DATE;
+    let diffInTime  = endDate.getTime() -  startDate.getTime();
+    return diffInTime / (1000 * 3600 * 24);
+
+  }
   const handleOnClick = async () => {
+     if( getDateDifference() > 7){
+       return(
+        window.alert("Duration cannot exceed more than 7")
+       );
+     };
     if (
       searchReduxData.COUNTRY_INFO &&
       searchReduxData.CITY_INFO &&
@@ -478,21 +491,25 @@ function Home(props) {
       <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', font:'caption', fontStyle:'oblique'}}>
         { localStorage.getItem("isUserLoggedIn") === "true" && (<h2>Your Reward Points are {localStorage.getItem("rewardPoints")}</h2> )}
       </div>
-      <Card className="m-5 border-0 shadow" style={styles.card}>
-        <Card.Body className="rowC">
-          {" "}
-          <CountrySelect />
-          &nbsp; &nbsp;
-          <CitySelect />
-          &nbsp; &nbsp;
-          <FromDate />
-          <div className="align">
-            <Button variant="outline-primary" size="sm" onClick={handleOnClick}>
-              Search Hotels
-            </Button>
-          </div>
-        </Card.Body>
-      </Card>
+      { localStorage.getItem("isEmployeeLoggedIn") ==  "false" && 
+        (
+        <Card className="m-5 border-0 shadow" style={styles.card}>
+          <Card.Body className="rowC">
+            {" "}
+            <CountrySelect />
+            &nbsp; &nbsp;
+            <CitySelect />
+            &nbsp; &nbsp;
+            <FromDate />
+            <div className="align">
+              <Button variant="outline-primary" size="sm" onClick={handleOnClick}>
+                Search Hotels
+              </Button>
+            </div>
+          </Card.Body>
+        </Card>
+        )
+      }
       {responseData}
       <Modal size="lg" show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
