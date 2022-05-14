@@ -17,7 +17,7 @@ import {
 import roomImage from "./Room1.jpg";
 
 import { MDBInput } from "mdbreact";
-import {Alert} from 'react-bootstrap';
+import { Alert } from "react-bootstrap";
 import { MDBIcon } from "mdbreact";
 
 import CountrySelect from "./search/CountrySelect";
@@ -25,7 +25,7 @@ import CitySelect from "./search/CitySelect";
 import "./Home.css";
 import FromDate from "./search/FromDatePicker";
 import { pink } from "@mui/material/colors";
-import StarIcon from '@mui/icons-material/Star';
+import StarIcon from "@mui/icons-material/Star";
 import { connect } from "react-redux";
 import axios from "axios";
 import { backend } from "./config";
@@ -130,20 +130,17 @@ function Home(props) {
     }
   };
 
-  const getDateDifference = ()=>{
+  const getDateDifference = () => {
     let startDate = searchReduxData.FROM_DATE;
     let endDate = searchReduxData.TO_DATE;
-    let diffInTime  = endDate.getTime() -  startDate.getTime();
+    let diffInTime = endDate.getTime() - startDate.getTime();
     return diffInTime / (1000 * 3600 * 24);
-
-  }
-  //Do not allow to book rooms if the duration is more than 7 days 
+  };
+  //Do not allow to book rooms if the duration is more than 7 days
   const handleOnClick = async () => {
-     if( getDateDifference() > 7){
-       return(
-        window.alert("Duration cannot exceed more than 7")
-       );
-     };
+    if (getDateDifference() > 7) {
+      return window.alert("Duration cannot exceed more than 7");
+    }
     if (
       searchReduxData.COUNTRY_INFO &&
       searchReduxData.CITY_INFO &&
@@ -174,7 +171,7 @@ function Home(props) {
     }
   };
 
-  const handleBooking = async () => {
+  const handleBooking = async (isWithRewards) => {
     let data = [
       {
         amenities: {
@@ -226,7 +223,7 @@ function Home(props) {
     xData = data.selectedRooms;
     console.log(JSON.stringify(xData));
     let sendData = {
-      bookWithRewards: 0,
+      bookWithRewards: isWithRewards,
       selectedRooms: [],
     };
 
@@ -526,8 +523,7 @@ function Home(props) {
           <h2>Your Reward Points are {localStorage.getItem("rewardPoints")}</h2>
         )}
       </div>
-      { localStorage.getItem("isEmployeeLoggedIn") ==  "false" && 
-        (
+      {localStorage.getItem("isEmployeeLoggedIn") == "false" && (
         <Card className="m-5 border-0 shadow" style={styles.card}>
           <Card.Body className="rowC">
             {" "}
@@ -537,14 +533,17 @@ function Home(props) {
             &nbsp; &nbsp;
             <FromDate />
             <div className="align">
-              <Button variant="outline-primary" size="sm" onClick={handleOnClick}>
+              <Button
+                variant="outline-primary"
+                size="sm"
+                onClick={handleOnClick}
+              >
                 Search Hotels
               </Button>
             </div>
           </Card.Body>
         </Card>
-        )
-      }
+      )}
       {responseData}
       <Modal size="lg" show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
@@ -557,9 +556,29 @@ function Home(props) {
         </Modal.Header>
         <Modal.Body>
           {responseRoomData}
-          <Button variant="outline-dark" size="lg" onClick={handleBooking}>
-            Book Room
-          </Button>
+          <div className="d-grid gap-2 rounded-circle">
+            <Button
+              variant="outline-dark"
+              size="md"
+              onClick={() => {
+                handleBooking(false);
+              }}
+            >
+              Book Room
+            </Button>
+          </div>
+          <br />
+          <div className="d-grid gap-2 rounded-circle">
+            <Button
+              variant="outline-warning"
+              size="md"
+              onClick={() => {
+                handleBooking(true);
+              }}
+            >
+              Book with Rewards
+            </Button>
+          </div>
         </Modal.Body>
       </Modal>
       <ToastContainer className="p-3" position="top-end">
