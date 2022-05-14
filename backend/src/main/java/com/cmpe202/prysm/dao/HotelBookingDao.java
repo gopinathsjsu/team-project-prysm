@@ -18,10 +18,10 @@ import java.util.Map;
 public class HotelBookingDao {
 
     public final String dbUrl = "jdbc:mysql://cmpe-202-prysm-db.c4aze5nwerob.us-west-1.rds.amazonaws.com:3306/cmpe202project";
-    public final String username = "admin";
-    public final String password = "password";
+    public final String dbUsername = "admin";
+    public final String dbPassword = "password";
 
-    public Connection connection = DriverManager.getConnection(dbUrl,username,password);
+    public Connection connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
 
     Logger logger = LoggerFactory.getLogger(HotelBookingDao.class);
 
@@ -242,7 +242,7 @@ public class HotelBookingDao {
     }
 
 
-    public int bookRooms(boolean bookWithRewards, List<Room> selectedRooms) {
+    public int bookRooms(boolean bookWithRewards, List<Room> selectedRooms) throws SQLException {
 
         //write into booking table with count of rooms booked and from and to date
         int totalPrice = 0;
@@ -253,7 +253,14 @@ public class HotelBookingDao {
             totalRooms += room.getCount_of_rooms();
         }
         if(bookWithRewards) {
-            totalPrice -= userRewards;
+            if(userRewards < totalPrice) {
+                totalPrice -= userRewards;
+                userRewards = 0;
+            } else {
+                userRewards -= totalPrice;
+                totalPrice = 0;
+            }
+            updateCustomerRewardsAfterBooking(USER_NAME, userRewards);
         }
 
         try {
@@ -304,13 +311,24 @@ public class HotelBookingDao {
     }
 
 
+    public void updateCustomerRewardsAfterBooking(String customerId, int rewards) throws SQLException {
+
+        String updateCustomerRewardsAfterBookingQuery = "Update customer set rewards = ? where customer_id = ?";
+
+        PreparedStatement preparedStatement = connection.prepareStatement(updateCustomerRewardsAfterBookingQuery);
+        preparedStatement.setInt(1, rewards);
+        preparedStatement.setString(2, customerId);
+        preparedStatement.executeUpdate();
+    }
+
+
     public List<BookingInformation> fetchCustomerHistory(String customerId) throws SQLException {
 
         String fetchCustomerHistoryQuery = "Select R.*, B.hotel_id, B.from_date, B.to_date, B.total_price, H.hotel_name from roomsBooked R join booking B " +
                                            "on R.booking_id = B.booking_id join hotel H on B.hotel_id = H.hotel_id where B.customer_id = ?;";
 
         PreparedStatement preparedStatement = connection.prepareStatement(fetchCustomerHistoryQuery);
-        preparedStatement.setString(1, customerId);
+        preparedStatement.setString(1, USER_NAME);
 
         List<BookingInformation> userBookingInformation = new ArrayList<>();
 
