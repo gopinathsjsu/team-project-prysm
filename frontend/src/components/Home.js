@@ -502,13 +502,16 @@ function Home(props) {
           fontStyle: "oblique",
         }}
       >
-        {localStorage.getItem("isEmployeeLoggedIn") === "true" && (
-          <h2>Welcome {localStorage.getItem("EmployeeName")} !</h2>
-        )}
+        <Row className="justify-content-md-center">
+          <Col xs lg="11">
+            { localStorage.getItem("isEmployeeLoggedIn") === "true" && (<h2>Welcome {localStorage.getItem("EmployeeName")} !</h2> )}
 
-        {localStorage.getItem("isUserLoggedIn") == "true" && (
-          <h2>Welcome {localStorage.getItem("Name")} !</h2>
-        )}
+            {  localStorage.getItem("isUserLoggedIn") ==  "true"   && (<h2>Welcome {localStorage.getItem("Name")} !</h2> )}
+          </Col>
+          <Col xs lg="2">
+            {localStorage.getItem("isLoyal") ==  "true" && (<StarIcon style={{color:'red'}}></StarIcon>) }
+          </Col>
+        </Row>
       </div>
       <div
         style={{
