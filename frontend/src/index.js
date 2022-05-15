@@ -9,7 +9,7 @@ import { persistStore, persistReducer } from "redux-persist";
 import { compose, createStore } from "redux";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/lib/integration/react";
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from "react-router-dom";
 
 const persistConfig = {
   key: "root",
@@ -27,13 +27,15 @@ const store = createStore(
 
 const persistor = persistStore(store);
 
-
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <PersistGate persistor={persistor}>
-      <BrowserRouter><App /></BrowserRouter>
-        
+        <BrowserRouter>
+          <div className="img">
+            <App />
+          </div>
+        </BrowserRouter>
       </PersistGate>
     </Provider>
   </React.StrictMode>,

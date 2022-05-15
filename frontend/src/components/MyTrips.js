@@ -17,14 +17,16 @@ import {
   ToastContainer,
   Toast,
 } from "react-bootstrap";
+import hotelImage from "./trip2.jpg";
 const styles = {
   card: {
     backgroundColor: "White",
     borderRadius: 55,
     padding: "2rem",
+    height: "430px",
   },
   cardImage: {
-    height: "100%",
+    height: "70%",
     objectFit: "cover",
     borderRadius: 15,
   },
@@ -92,6 +94,13 @@ export const MyTrips = () => {
       if (response.data) {
         setShowToast(true);
         window.location.href = "/myTrips";
+        const customerID = localStorage.getItem("userName");
+
+        const res = await axios.get(`${backend}/getCustomerRewards/`, {
+          params: { customer_id: customerID },
+        });
+        console.log(res.data);
+        localStorage.setItem("rewardPoints", res.data);
       } else {
         setShowToastFailed(true);
       }
@@ -106,7 +115,7 @@ export const MyTrips = () => {
             <Card className="m-5 border-0 shadow" style={styles.card}>
               <Row>
                 <Col>
-                  <Card.Img src="Image" style={styles.cardImage} />
+                  <Card.Img src={hotelImage} style={styles.cardImage} />
                 </Col>
                 <Col>
                   <Card.Header as="h3">{data.hotel_name}</Card.Header>
@@ -128,6 +137,8 @@ export const MyTrips = () => {
                       </tbody>
                     </Table>
                   </Card.Body>
+                  <br />
+                  <br />
                   <Button
                     variant="outline-primary"
                     onClick={() => {

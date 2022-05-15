@@ -15,6 +15,7 @@ import {
   Toast,
 } from "react-bootstrap";
 import roomImage from "./Room1.jpg";
+import hotelImage from "./trip2.jpg";
 
 import { MDBInput } from "mdbreact";
 import { Alert } from "react-bootstrap";
@@ -72,7 +73,7 @@ function Home(props) {
       padding: "2rem",
     },
     cardImage: {
-      height: "100%",
+      height: "70%",
       objectFit: "cover",
       borderRadius: 15,
     },
@@ -249,6 +250,13 @@ function Home(props) {
         setShowToastFailed(true);
       } else {
         setShowToast(true);
+        const customerID = localStorage.getItem("userName");
+
+        const res = await axios.get(`${backend}/getCustomerRewards/`, {
+          params: { customer_id: customerID },
+        });
+        console.log(res.data);
+        localStorage.setItem("rewardPoints", res.data);
       }
     } catch (error) {}
     props.resetPrice();
@@ -265,7 +273,7 @@ function Home(props) {
         params: { hotel_id: hotelID },
       });
       var temp = {};
-      console.log(JSON.stringify(response));
+      console.log(JSON.stringify(response) + "fetchRooms");
       response.data.map(function (room) {
         if (room.room_type === "single") {
           temp["single"] = room.price;
@@ -280,7 +288,6 @@ function Home(props) {
       setRoomData(response.data);
       setflagRooms(true);
       setShowModal(true);
-      console.log(JSON.stringify(response));
     } catch (error) {
       console.log(error);
     }
@@ -423,11 +430,16 @@ function Home(props) {
             <Card
               key={hotel.hotel_id}
               className="m-5 border-0 shadow"
-              style={styles.card}
+              style={{
+                backgroundColor: "White",
+                borderRadius: 55,
+                padding: "2rem",
+                height: "430px",
+              }}
             >
               <Row>
                 <Col>
-                  <Card.Img src="Image" style={styles.cardImage} />
+                  <Card.Img src={hotelImage} style={styles.cardImage} />
                 </Col>
                 <Col>
                   <Card.Header as="h3">{hotel.hotel_name}</Card.Header>
@@ -498,18 +510,24 @@ function Home(props) {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          font: "caption",
-          fontStyle: "oblique",
+
+          // fontStyle: "oblique",
         }}
       >
-        <Row className="justify-content-md-center">
+        <Row xs>
           <Col xs lg="11">
-            { localStorage.getItem("isEmployeeLoggedIn") === "true" && (<h2>Welcome {localStorage.getItem("EmployeeName")} !</h2> )}
+            {localStorage.getItem("isEmployeeLoggedIn") === "true" && (
+              <h2>Welcome {localStorage.getItem("EmployeeName")}!</h2>
+            )}
 
-            {  localStorage.getItem("isUserLoggedIn") ==  "true"   && (<h2>Welcome {localStorage.getItem("Name")} !</h2> )}
+            {localStorage.getItem("isUserLoggedIn") == "true" && (
+              <h2>Welcome {localStorage.getItem("Name")}!</h2>
+            )}
           </Col>
-          <Col xs lg="2">
-            {localStorage.getItem("isLoyal") ==  "true" && (<StarIcon style={{color:'red'}}></StarIcon>) }
+          <Col xs lg="1">
+            {localStorage.getItem("isLoyal") == "true" && (
+              <StarIcon style={{ color: "blue" }}></StarIcon>
+            )}
           </Col>
         </Row>
       </div>
@@ -518,8 +536,8 @@ function Home(props) {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          font: "caption",
-          fontStyle: "oblique",
+
+          // fontStyle: "oblique",
         }}
       >
         {localStorage.getItem("isUserLoggedIn") === "true" && (
