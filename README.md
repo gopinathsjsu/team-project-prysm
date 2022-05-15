@@ -19,7 +19,7 @@ Team Members:
 
 ### <a href="https://docs.google.com/spreadsheets/d/1O52kV-XbQbLxiX3KBoMYo03LibjcO-frWsoh8WwfL58/edit?usp=sharing">Google Sprint Task Sheet</a>
 
-![Burndown Chart](images\Burndown.png)
+![Burndown Chart](images/Burndown.png)
 
 
 ## XP Core Values
@@ -102,11 +102,11 @@ Team Members:
 
 ## Component Diagram:
 
-![Component Diagram](images\component-diagrampng)
+![Component Diagram](images/component-diagrampng)
 
 ## Architecture Diagram:
 
-![System](images\System.jpg)
+![System](images/System.jpg)
 
 ## Design Decisions:
 When designing this website, we adhered to the primary concept of simplicity while focusing on the main goal at hand: allowing a user to book a hotel room in a flow that made sense to us. We created a table for each aspect of booking a hotel room: Customer, Hotel, Booking, Employee, Room, RoomsBooked. Our APIs are built around activities a user could perform to travel to a different section of the website and what the user would anticipate as a return value. We attempted to make the website as easy to use as possible. Pricing was introduced in a way that made sense to us: higher costs on Saturdays and Sundays and also Public Holidays. Prices also vary on the basis of the season - Spring, Summer, Fall and Winter.
