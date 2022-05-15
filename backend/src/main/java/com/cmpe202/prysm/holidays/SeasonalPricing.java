@@ -43,7 +43,7 @@ public class SeasonalPricing implements  PriceHandler{
 
     @Override
     public void setPriceHandler(PriceHandler priceHandler) {
-
+        this.next = priceHandler;
     }
 
     @Override

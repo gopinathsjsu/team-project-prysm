@@ -365,7 +365,7 @@ public class HotelBookingDao {
 
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
-            customerRewards += resultSet.getInt(1);
+            customerRewards = resultSet.getInt(1);
         }
 
         customerRewards = Math.max(0, customerRewards + rewards);
