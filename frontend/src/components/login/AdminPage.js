@@ -63,7 +63,7 @@ const AdminPage = ()=> {
       <td>{hotel.city}</td>
       <td>{hotel.daily_continental_breakfast?"True":"False" }</td>
       <td>{hotel.fitness_room?"True":"False" }</td>
-      <td>{hotel.Swimming_pool?"True":"False" }</td>
+      <td>{hotel.swimming_pool?"True":"False" }</td>
       <td>{hotel.jacuzzi?"True":"False" }</td>
       <td>{hotel.daily_parking?"True":"False" }</td>
       <td>{hotel.all_meals?"True":"False" }</td>

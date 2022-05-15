@@ -39,7 +39,6 @@ const LoginForm = ({handleCloseLogin}) => {
       // make axios post request
       const response = await axios.post(`${backend}/loginUser`, data);
       const userData = response.data;
-      console.log(userData);
       if(userData.username){
         handleCloseLogin();
         console.log(localStorage);

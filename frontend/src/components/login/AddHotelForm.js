@@ -23,6 +23,7 @@ const AddHotelForm = (props) => {
     });
 
     const handleChange = (event) => {
+       console.log("On change"+event.target.name);
       setformValue({
         ...formValue,
         [event.target.name]: event.target.value,
@@ -46,7 +47,7 @@ const AddHotelForm = (props) => {
       try {
         const response = await axios.post(`${backend}/addHotel`, data);
         console.log(response);
-        if(response.data === 'Success'){
+        if(response.data){
           console.log('Hotel added');
         }
       }
@@ -119,10 +120,10 @@ const AddHotelForm = (props) => {
                 Daily Continental Breakfast
               </Form.Label>
               <Col sm={8}>
-                  <Form.Select aria-label="Default select example">
+                  <Form.Select name='daily_continental_breakfast:' onChange={handleChange}>
                         <option>select</option>
-                        <option value="1">True</option>
-                        <option value="2">False</option>
+                        <option value = {true} >True</option>
+                        <option value={false}>False</option>
                   </Form.Select>
               </Col>
             </Form.Group>
@@ -131,10 +132,10 @@ const AddHotelForm = (props) => {
                 Fitness Room
               </Form.Label>
               <Col sm={8}>
-                 <Form.Select aria-label="Default select example">
+                 <Form.Select name='fitness_room' onChange={handleChange}>
                         <option>select</option>
-                        <option value="1">True</option>
-                        <option value="2">False</option>
+                        <option value={true}>True</option>
+                        <option value={false}>False</option>
                   </Form.Select>
               </Col>
             </Form.Group>
@@ -143,10 +144,10 @@ const AddHotelForm = (props) => {
                 Swimming Pool
               </Form.Label>
               <Col sm={8}>
-                  <Form.Select aria-label="Default select example">
+                  <Form.Select name='swimming_pool' onChange={handleChange}>
                         <option>select</option>
-                        <option value="1">True</option>
-                        <option value="2">False</option>
+                        <option value={true}>True</option>
+                        <option value={false}>False</option>
                   </Form.Select>
               </Col>
             </Form.Group>
@@ -155,10 +156,10 @@ const AddHotelForm = (props) => {
                 Jacuzzi
               </Form.Label>
               <Col sm={8}>
-                  <Form.Select aria-label="Default select example">
+                  <Form.Select name='jacuzzi' onChange={handleChange}>
                         <option>select</option>
-                        <option value="1">True</option>
-                        <option value="2">False</option>
+                        <option value={true}>True</option>
+                        <option value={false}>False</option>
                   </Form.Select>
               </Col>
             </Form.Group>
@@ -167,10 +168,10 @@ const AddHotelForm = (props) => {
                 Daily Parking
               </Form.Label>
               <Col sm={8}>
-                  <Form.Select aria-label="Default select example">
+                  <Form.Select name='daily_parking' onChange={handleChange}>
                         <option>select</option>
-                        <option value="1">True</option>
-                        <option value="2">False</option>
+                        <option value={true}>True</option>
+                        <option value={false}>False</option>
                   </Form.Select>
               </Col>
             </Form.Group>
@@ -179,10 +180,10 @@ const AddHotelForm = (props) => {
                 All Meals
               </Form.Label>
               <Col sm={8}>
-                  <Form.Select aria-label="Default select example">
+                  <Form.Select name = 'all_meals' onChange={handleChange}>
                         <option>select</option>
-                        <option value="1">True</option>
-                        <option value="2">False</option>
+                        <option value={true}>True</option>
+                        <option value={true}>False</option>
                   </Form.Select>
               </Col>
             </Form.Group>
