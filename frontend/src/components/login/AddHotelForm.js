@@ -30,7 +30,6 @@ const AddHotelForm = (props) => {
       });
   };
     const handleAddHotelSubmit = async (event)=>{
-      event.preventDefault();
       let data = {
         hotel_id: formValue.hotel_id,
         hotel_name: formValue.hotel_name,
