@@ -26,16 +26,6 @@ Team Members:
 <b>Rohitkumar Yadav</b>: Worked on database schema design and frontend and backend part of the user sign up, view rooms component, and cancel booking feature. 
 
 
-Create database schema design
-Created Navbar with login, signup and home buttons
-- Created Employee login Landing Page
-- Created view rooms API
-- Created book room API
-- Created API to fetch the current bookings
-- Added cancel booking button on My Trips page
-- Created Modal Form to create a new hotel on Employee Landing Page
-
-
 
 ### <a href="https://github.com/gopinathsjsu/team-project-prysm/projects/3">Project Board</a>
 
