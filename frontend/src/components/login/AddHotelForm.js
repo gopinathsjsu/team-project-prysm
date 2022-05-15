@@ -30,6 +30,7 @@ const AddHotelForm = (props) => {
       });
   };
     const handleAddHotelSubmit = async (event)=>{
+      event.preventDefault();
       let data = {
         hotel_id: formValue.hotel_id,
         hotel_name: formValue.hotel_name,
@@ -119,7 +120,7 @@ const AddHotelForm = (props) => {
                 Daily Continental Breakfast
               </Form.Label>
               <Col sm={8}>
-                  <Form.Select name='daily_continental_breakfast:' onChange={handleChange}>
+                  <Form.Select name='daily_continental_breakfast' onChange={handleChange}>
                         <option>select</option>
                         <option value = {true} >True</option>
                         <option value={false}>False</option>
