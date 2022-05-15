@@ -125,3 +125,92 @@ When designing this website, we adhered to the primary concept of simplicity whi
 - Booked rooms will be displayed on **My trips** pages
 - **Employee** can Login as an **Admin**
 - **Admin** can **Create Hotel**
+
+
+# Scrum Meeting Notes
+
+## Schedule for Scrum Meetings:
+ - Tuesday
+ - Friday
+
+## Week 1:
+- April 5
+  - Went through project guidelines to start brainstorming 
+  - who does what and finding tech stack to use (software, etc.)
+  - Finalizing tech stack
+  - Frontend: React JS, HTMl, CSS, JS
+- April 8
+  - Backend: SpringBoot with mySQL database on a RDS instance
+  - Created package.json
+  - Created index.js
+  - Setting up basic java springboot
+
+## Week 2:
+
+- April 12
+  - Created an RDS instance for the database
+  - Created tables as per the decided schema
+  - Added user, hotel and room tables
+  - Inserted mock data to the tables
+- April 15
+  - Created user login API
+  - Created user signup API
+  - Tested the APIs using Postman
+  - Installed node packages for react-bootstrap
+
+## Week 3:
+
+- April 19
+  - Created Landing page for the application
+  - Created Navbar with login, signup and home buttons
+  - Created Modals for login and signup
+  - Integrated the login/signup with their APIs
+- April 22
+  - Added hotel search on Home page
+  - Created API for employee login
+  - Created Employee login Modal
+  - Created Employee login Landing Page
+
+## Week 4:
+
+- April 26
+  - Created hotel search API
+  - Created view rooms API 
+  - Added component to display hotels
+  - Added modals to display room data for the selected hotel
+  - Added amenities for selection in the modal
+- April 29
+  - Added Book Room button
+  - Create Book successful Modal
+  - Create Boooking Error Modal
+  - Created book room API
+  - Integerated book room API with frontend
+
+## Week 5:
+
+- May 3
+  - Added My Trips page in frontend
+  - Created API to fetch the current bookings
+  - Implemented customer loyalty logic based on their signup and bookings
+  - Added feature to book a room using rewards points
+  - Implemented API to update and cancel existing bookings
+  - Added update booking modal on My Trips page
+  - Added cancel booking button on My Trips page
+- May 6
+  - Implemented API to fetch all hotels as Employee
+  - Implemented API to add hotel as Employee
+  - Created component to display all hotels on Employee Landing Page
+  - Created Modal Form to create a new hotel on Employee Landing Page
+  - Integrated all the APIs
+
+## Week 6:
+
+- May 10
+  - Implemented dynamic pricing
+  - Local storage Implementation
+- May 13
+  - Deployed the backend application
+  - Updated frontend with new API routes
+  - Tested the working of the application
+  - Refractor code and fixed bugs
+
