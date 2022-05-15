@@ -527,7 +527,7 @@ function Home(props) {
         }}
       >
         <Row xs>
-          <Col xs lg="10">
+          <Col xs lg="11sh ">
             {localStorage.getItem("isEmployeeLoggedIn") === "true" && (
               <h2>Welcome {localStorage.getItem("EmployeeName")}!</h2>
             )}
