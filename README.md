@@ -11,7 +11,29 @@ Team Members:
 
 ## Responsibilities
 
-<b>Front End, Back End</b>: Soham Kasar, Milan Joshi, Prashanth Adapa, Rohitkumar Yadav <br>
+<b>Front End, Back End</b>:  Milan Joshi, Prashanth Adapa, Soham Kasar, Rohitkumar Yadav <br>
+
+## Contributions 
+
+
+
+<b>Milan Joshi</b>: Worked on frontend and backend part of the Landing page for the application, hotel search component, and add hotel as Employee feature.
+
+<b>Prashanth Adapa</b>: Worked on frontend and backend part of the employee login, customer loyalty check, dynamic pricing feature, booking modal, and deployed the backend application.
+
+<b>Soham Kasar</b>: Worked on frontend and backend part of the update hotel booking, user login, fetch current booking and documentation of the application.
+
+<b>Rohitkumar Yadav</b>: Worked on database schema design and frontend and backend part of the user sign up, view rooms component, and cancel booking feature. 
+
+
+Create database schema design
+Created Navbar with login, signup and home buttons
+- Created Employee login Landing Page
+- Created view rooms API
+- Created book room API
+- Created API to fetch the current bookings
+- Added cancel booking button on My Trips page
+- Created Modal Form to create a new hotel on Employee Landing Page
 
 
 
