@@ -17,7 +17,7 @@ Team Members:
 
 
 
-###<b>Milan Joshi</b> 
+### Milan Joshi 
 - Create User Login
 - Create Landing Page for the application
 - API to perform hotel search
@@ -26,7 +26,7 @@ Team Members:
 - API to cancel a successful booking
 - API to add hotel for an Employee
 
-###<b>Prashanth Adapa</b> 
+### Prashanth Adapa  
 - Create Employee Login API
 - Integrate both front end and backend for employee login
 - Integrate both front end and backend for user signup/login
@@ -35,15 +35,16 @@ Team Members:
 - Implement Dynamic Pricing for room selection based on date
 - Deploy backend on AWS
 
-###<b>Soham Kasar</b>
+### Soham Kasar 
 - Create modals for both user signup and login
 - Crete modal for Employee login
 - API to search hotels
 - Component to display hotels
 - Add modal to display room information for the selected hotels
 - Add modal to update customer booking
+- Set up RDS
 
-###<b>Rohitkumar Yadav</b> 
+### Rohitkumar Yadav
 - Create Navbar with signup/login and home buttons
 - Create Employee Landing Page
 - API to fetch available rooms
