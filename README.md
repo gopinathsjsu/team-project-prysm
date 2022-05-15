@@ -20,3 +20,108 @@ Team Members:
 ### <a href="https://docs.google.com/spreadsheets/d/1O52kV-XbQbLxiX3KBoMYo03LibjcO-frWsoh8WwfL58/edit?usp=sharing">Google Sprint Task Sheet</a>
 
 ![Burndown Chart](images\Burndown.png)
+
+
+## XP Core Values
+
+- **_Communication_**: We conducted meetings every week in-person to discuss crucial aspects of the project by collaborating and communicating with each other.
+- **_Feedback_**. Team members delivered software frequently, got feedback about it, and refractored the code according to the new requirements.
+
+<b>How the team kept the core value? <br></b><br>
+
+- Team meetings were held during which diagrams were created to depict the structure of the tables in the back-end. <br>
+- Mock-ups of how the front-end will look like on Figma. <br>
+- Every Standup contains a discussion of the work completed, the obstacles encountered, and any deviations from the diagrams and mockups in the implementation.
+
+## TECH STACK USED:
+
+- Frontend: ReactJS
+- Backend: Java SpringBoot
+- Database: RDS MySQL
+- REST API: Postman(Testing APIs)
+- Cloud: AWS Elastic Beanstalk
+
+## TASKS COMPLETED:
+
+- Backend
+  - Create all the tables as per the Schema Diagrams discussed during the meetings (initially with local sql sb)
+  - Explore ec2 and Amazon Relational Database Service (RDS) using a basic schema. 
+  - Added Tables:
+    - Customer
+    - Employee
+    - Hotel
+    - Room
+    - Booking
+    - RoomsBooked
+  - Added API Calls:
+    - /loginUser
+    - /loginEmployee
+    - /registerUser
+    - /fetchHotels
+    - /addHotel
+    - /fetchRooms
+    - /fetchCustomerHistory
+    - /getHotels
+    - /bookRooms
+    - /cancelReservations
+    - /getCustomerRewards
+    - /updateReservations
+    - /getCustomerLoyalty
+  - Implemented Dynamic and Seasonal Pricing
+  - Deploying docker image on Elastic Beanstalk (with every feature release)
+
+- Frontend
+  - Create Routing
+  - Setup Redux for state management
+  - Create Home page
+  - Create Login and SignUp pages
+  - Create Navbar
+  - Create Routing on Navbar
+  - Add Links to Navbar
+  - Create Hotel Search
+  - Create Hotel add for Employee
+  - Create Booking Modal
+  - Add different rooms on booking
+  - Add Card View for different rooms
+  - Add Amenities on Room Book
+  - Create My Trips page
+  - Add Card View for users Trips
+  - Add Dynamic price addition on checking amenities
+  - Create Rewards on Room book
+  - Add Dynamic Price Deduction on room book using rewards
+
+## UI Wireframes:
+
+
+
+### <a href="https://www.figma.com/file/aR9uzlswdd6iCbSIW0KuRe/Prysm-202?node-id=0%3A1">Figma Link</a>
+
+![Figma](images/FigmaUI.png)
+
+
+
+## Component Diagram:
+
+![Component Diagram](images\component-diagrampng)
+
+## Architecture Diagram:
+
+![System](images\System.jpg)
+
+## Design Decisions:
+When designing this website, we adhered to the primary concept of simplicity while focusing on the main goal at hand: allowing a user to book a hotel room in a flow that made sense to us. We created a table for each aspect of booking a hotel room: Customer, Hotel, Booking, Employee, Room, RoomsBooked. Our APIs are built around activities a user could perform to travel to a different section of the website and what the user would anticipate as a return value. We attempted to make the website as easy to use as possible. Pricing was introduced in a way that made sense to us: higher costs on Saturdays and Sundays and also Public Holidays. Prices also vary on the basis of the season - Spring, Summer, Fall and Winter.
+
+## Feature Set:
+
+- **User** can Login/Sign-up an account
+- **User** can Make/Update/Cancel reservation.
+- **User** can select location/check-in/checkout date for Hotel search
+- **User** can select the type of room
+- **User** can book a room with/without rewards
+- **User** can select the number of rooms/people.
+- Based on the **number of people** type of room will be displayed
+- **Loyalty points** for user will be incrementally aded since the day user had created an account
+- Hotel rates are based on **Dynamic/Seasonal Pricing**
+- Booked rooms will be displayed on **My trips** pages
+- **Employee** can Login as an **Admin**
+- **Admin** can **Create Hotel**
