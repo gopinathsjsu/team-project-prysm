@@ -17,13 +17,39 @@ Team Members:
 
 
 
-<b>Milan Joshi</b>: Worked on frontend and backend part of the Landing page for the application, hotel search component, and add hotel as Employee feature.
+###<b>Milan Joshi</b> 
+- Create User Login
+- Create Landing Page for the application
+- API to perform hotel search
+- API to book room using rewards
+- API to update a successful booking
+- API to cancel a successful booking
+- API to add hotel for an Employee
 
-<b>Prashanth Adapa</b>: Worked on frontend and backend part of the employee login, customer loyalty check, dynamic pricing feature, booking modal, and deployed the backend application.
+###<b>Prashanth Adapa</b> 
+- Create Employee Login API
+- Integrate both front end and backend for employee login
+- Integrate both front end and backend for user signup/login
+- Implement customer loyalty logic based on user booking history
+- API to fetch all hotels 
+- Implement Dynamic Pricing for room selection based on date
+- Deploy backend on AWS
 
-<b>Soham Kasar</b>: Worked on frontend and backend part of the update hotel booking, user login, fetch current booking and documentation of the application.
+###<b>Soham Kasar</b>
+- Create modals for both user signup and login
+- Crete modal for Employee login
+- API to search hotels
+- Component to display hotels
+- Add modal to display room information for the selected hotels
+- Add modal to update customer booking
 
-<b>Rohitkumar Yadav</b>: Worked on database schema design and frontend and backend part of the user sign up, view rooms component, and cancel booking feature. 
+###<b>Rohitkumar Yadav</b> 
+- Create Navbar with signup/login and home buttons
+- Create Employee Landing Page
+- API to fetch available rooms
+- API to book selected rooms
+- API to fetch customer booking history
+- Implement cancel booking for user
 
 
 
@@ -36,8 +62,8 @@ Team Members:
 
 ## XP Core Values
 
-- **_Communication_**: We conducted meetings every week in-person to discuss crucial aspects of the project by collaborating and communicating with each other.
-- **_Feedback_**. Team members delivered software frequently, got feedback about it, and refractored the code according to the new requirements.
+- **_Communication_** : We conducted meetings every week in-person to discuss crucial aspects of the project by collaborating and communicating with each other.
+- **_Feedback_** : Team members delivered software frequently, got feedback about it, and refractored the code to make improvements for working code and fix bugs.
 
 <b>How the team kept the core value? <br></b><br>
 
@@ -56,8 +82,8 @@ Team Members:
 ## TASKS COMPLETED:
 
 - Backend
-  - Create all the tables as per the Schema Diagrams discussed during the meetings (initially with local sql sb)
-  - Explore ec2 and Amazon Relational Database Service (RDS) using a basic schema. 
+  - Create all the tables as per the Schema Diagrams discussed during the meetings (Initially with local MYSQL Database)
+  - Explore EC2 and Amazon Relational Database Service (RDS) using a basic schema. 
   - Added Tables:
     - Customer
     - Employee
@@ -66,21 +92,22 @@ Team Members:
     - Booking
     - RoomsBooked
   - Added API Calls:
-    - /loginUser
     - /loginEmployee
-    - /registerUser
-    - /fetchHotels
     - /addHotel
-    - /fetchRooms
-    - /fetchCustomerHistory
     - /getHotels
+    - /registerUser
+    - /loginUser
+    - /fetchHotels
+    - /fetchRooms
     - /bookRooms
+    - /fetchCustomerHistory
     - /cancelReservations
-    - /getCustomerRewards
     - /updateReservations
+    - /getCustomerRewards
     - /getCustomerLoyalty
-  - Implemented Dynamic and Seasonal Pricing
-  - Deploying docker image on Elastic Beanstalk (with every feature release)
+  - Design Patterns Used : Chain Of Responsibility and Singleton. We have used COR to handle Dynamic Pricing and Singleton to generate instance of a class which holds information of all public holidays.
+  - Deploy backend on EC2 (with every feature release)
+  - Setup load balancer and expose end point of the load balancer to redirect traffic.
 
 - Frontend
   - Create Routing
@@ -105,7 +132,6 @@ Team Members:
 ## UI Wireframes:
 
 
-
 ### <a href="https://www.figma.com/file/aR9uzlswdd6iCbSIW0KuRe/Prysm-202?node-id=0%3A1">Figma Link</a>
 
 ![Figma](images/FigmaUI.png)
@@ -121,7 +147,7 @@ Team Members:
 ![System](images/System.jpg)
 
 ## Design Decisions:
-When designing this website, we adhered to the primary concept of simplicity while focusing on the main goal at hand: allowing a user to book a hotel room in a flow that made sense to us. We created a table for each aspect of booking a hotel room: Customer, Hotel, Booking, Employee, Room, RoomsBooked. Our APIs are built around activities a user could perform to travel to a different section of the website and what the user would anticipate as a return value. We attempted to make the website as easy to use as possible. Pricing was introduced in a way that made sense to us: higher costs on Saturdays and Sundays and also Public Holidays. Prices also vary on the basis of the season - Spring, Summer, Fall and Winter.
+While designing the website, we adhered to the primary concept of simplicity while focusing on the main goal at hand: Allowing a user to book a hotel room in a flow that made sense to us. We created a table for each aspect of booking a hotel room: Customer, Hotel, Booking, Employee, Room, RoomsBooked. Our APIs are built around activities a user could perform to travel to a different section of the website and what the user would anticipate as a return value. We attempted to make the website as easy to use as possible. Pricing was introduced in a way that made sense to us: Higher costs on Saturdays and Sundays and surge on Public Holidays. Additionally, Prices also vary on the basis of the season - Spring, Summer, Fall and Winter.
 
 ## Feature Set:
 
@@ -134,7 +160,7 @@ When designing this website, we adhered to the primary concept of simplicity whi
 - Based on the **number of people** type of room will be displayed
 - **Loyalty points** for user will be incrementally aded since the day user had created an account
 - Hotel rates are based on **Dynamic/Seasonal Pricing**
-- Booked rooms will be displayed on **My trips** pages
+- Booked history is displayed on **My trips** page
 - **Employee** can Login as an **Admin**
 - **Admin** can **Create Hotel**
 
@@ -149,13 +175,14 @@ When designing this website, we adhered to the primary concept of simplicity whi
 - April 5
   - Went through project guidelines to start brainstorming 
   - who does what and finding tech stack to use (software, etc.)
-  - Finalizing tech stack
+  - Finalizing front end tech stack
   - Frontend: React JS, HTMl, CSS, JS
 - April 8
+  - Finalized backend tech stack
   - Backend: SpringBoot with mySQL database on a RDS instance
   - Created package.json
   - Created index.js
-  - Setting up basic java springboot
+  - Setting up java springboot working environment
 
 ## Week 2:
 
