@@ -118,10 +118,10 @@ public class HotelBookingController {
 
 
     //Get Customer Rewards
-    @GetMapping(path = "/getCustomerRewards",
+    @GetMapping(path = "/getCustomerRewards/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public int getCustomerRewards() throws SQLException {
-        return hotelBookingDao.getCustomerRewards();
+    public int getCustomerRewards(@RequestParam String customerId) throws SQLException {
+        return hotelBookingDao.getCustomerRewards(customerId);
     }
 
 

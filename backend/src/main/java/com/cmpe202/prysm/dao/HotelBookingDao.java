@@ -58,8 +58,17 @@ public class HotelBookingDao {
     }
 
 
-    public int getCustomerRewards() {
-        return userRewards;
+    public int getCustomerRewards(String customerId) throws SQLException {
+        String getCustomerRewardsQuery = "Select rewards from customer where customer_id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(getCustomerRewardsQuery);
+        preparedStatement.setString(1, customerId);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        int rewards = 0;
+        while (resultSet.next()) {
+            rewards = resultSet.getInt(1);
+        }
+        return rewards;
     }
 
 
