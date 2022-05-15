@@ -537,7 +537,7 @@ function Home(props) {
             )}
           </Col>
           <Col xs lg="1">
-            {localStorage.getItem("rewardPoints") >= 100 && (
+            {localStorage.getItem("rewardPoints") >= 100 && localStorage.getItem("isUserLoggedIn") == "true" &&(
               <StarIcon style={{ color: "blueviolet" }}></StarIcon>
             )}
           </Col>
