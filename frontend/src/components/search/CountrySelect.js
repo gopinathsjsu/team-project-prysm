@@ -25,11 +25,13 @@ const CountrySelect = () => {
   // const handleCallback = () => {
   //   setcurrencyvalue(formValue);
   // };
+
   const customStyles = {
     control: (base) => ({
       ...base,
-      height: 55,
-      minHeight: 55,
+      height: 50,
+      minHeight: 50,
+      borderColor: "black",
     }),
   };
 

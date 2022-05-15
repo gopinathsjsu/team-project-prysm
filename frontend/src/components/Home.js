@@ -78,6 +78,18 @@ function Home(props) {
       borderRadius: 15,
     },
   };
+  const styles2 = {
+    card: {
+      backgroundColor: "White",
+      borderRadius: 55,
+      padding: "2rem",
+    },
+    cardImage: {
+      height: "100%",
+      objectFit: "cover",
+      borderRadius: 15,
+    },
+  };
   const handleCloseModal = () => {
     setShowModal(false);
     props.resetPrice();
@@ -298,10 +310,10 @@ function Home(props) {
       RoomData.map((room) => (
         <Container fluid className="text-center">
           <CardGroup className="m-9 d-block">
-            <Card className="m-5 border-0 shadow" style={styles.card}>
+            <Card className="m-5 border-0 shadow" style={styles2.card}>
               <Row>
                 <Col>
-                  <Card.Img src={roomImage} style={styles.cardImage} />
+                  <Card.Img src={roomImage} style={styles2.cardImage} />
                 </Col>
                 <Col>
                   {/* <Card.Header as="h3"></Card.Header> */}
@@ -549,9 +561,7 @@ function Home(props) {
           <Card.Body className="rowC">
             {" "}
             <CountrySelect />
-            &nbsp; &nbsp;
             <CitySelect />
-            &nbsp; &nbsp;
             <FromDate />
             <div className="align">
               <Button

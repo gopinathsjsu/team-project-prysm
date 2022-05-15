@@ -22,8 +22,6 @@ function FromDatePicker() {
 
   dispatch(fromGuests(numOfGuests));
   dispatch(fromRooms(numOfRooms));
-   
-
 
   const handleCheckInDate = (date) => {
     setCheckInDate(date);
@@ -70,17 +68,19 @@ function FromDatePicker() {
   return (
     <div className="App">
       <div className="input-container">
-        <div>
+        <div className="input-contents">
           <label>Check-in</label>
           <DatePicker
+            wrapperClassName="datePicker"
             selected={checkInDate}
             minDate={new Date()}
             onChange={handleCheckInDate}
           />
         </div>
-        <div>
+        <div className="input-contents">
           <label>Check-out</label>
-          <DatePicker 
+          <DatePicker
+            wrapperClassName="datePicker"
             selected={checkOutDate}
             minDate={checkInDate}
             onChange={handleCheckOutDate}
@@ -92,6 +92,7 @@ function FromDatePicker() {
             min={1}
             value={numOfGuests}
             className="form-control"
+            wrapperClassName="formInput"
             onChange={handleGuests}
           />
         </div>
@@ -102,6 +103,7 @@ function FromDatePicker() {
             min={1}
             value={numOfRooms}
             className="form-control"
+            wrapperClassName="formInput"
             onChange={handleRooms}
           />
         </div>

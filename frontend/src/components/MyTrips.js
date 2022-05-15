@@ -93,7 +93,7 @@ export const MyTrips = () => {
       console.log(response);
       if (response.data) {
         setShowToast(true);
-        window.location.href = "/myTrips";
+
         const customerID = localStorage.getItem("userName");
 
         const res = await axios.get(`${backend}/getCustomerRewards/`, {
@@ -101,6 +101,7 @@ export const MyTrips = () => {
         });
         console.log(res.data);
         localStorage.setItem("rewardPoints", res.data);
+        window.location.href = "/myTrips";
       } else {
         setShowToastFailed(true);
       }
