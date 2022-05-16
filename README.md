@@ -66,8 +66,7 @@ Team Members:
 - **_Communication_** : We conducted meetings every week in-person to discuss crucial aspects of the project by collaborating and communicating with each other.
 - **_Feedback_** : Team members delivered software frequently, got feedback about it, and refractored the code to make improvements for working code and fix bugs.
 
-<b>How the team kept the core value? <br></b><br>
-
+<b>How the team kept the core value? </b>
 - Team meetings were held during which diagrams were created to depict the structure of the tables in the back-end. <br>
 - Mock-ups of how the front-end will look like on Figma. <br>
 - Every Standup contains a discussion of the work completed, the obstacles encountered, and any deviations from the diagrams and mockups in the implementation.
@@ -78,11 +77,11 @@ Team Members:
 - Backend: Java SpringBoot
 - Database: RDS MySQL
 - REST API: Postman(Testing APIs)
-- Cloud: AWS Elastic Beanstalk
+- Cloud: AWS EC2
 
 ## TASKS COMPLETED:
 
-- Backend
+- ### Backend ###
   - Create all the tables as per the Schema Diagrams discussed during the meetings (Initially with local MYSQL Database)
   - Explore EC2 and Amazon Relational Database Service (RDS) using a basic schema. 
   - Added Tables:
@@ -110,7 +109,7 @@ Team Members:
   - Deploy backend on EC2 (with every feature release)
   - Setup load balancer and expose end point of the load balancer to redirect traffic.
 
-- Frontend
+- ### Frontend ###
   - Create Routing
   - Setup Redux for state management
   - Create Home page
@@ -175,12 +174,12 @@ While designing the website, we adhered to the primary concept of simplicity whi
  - Friday
 
 ## Week 1:
-- April 5
+- ### April 5 ### 
   - Went through project guidelines to start brainstorming 
   - who does what and finding tech stack to use (software, etc.)
   - Finalizing front end tech stack
   - Frontend: React JS, HTMl, CSS, JS
-- April 8
+- ### April 8 ### 
   - Finalized backend tech stack
   - Backend: SpringBoot with mySQL database on a RDS instance
   - Created package.json
@@ -189,12 +188,12 @@ While designing the website, we adhered to the primary concept of simplicity whi
 
 ## Week 2:
 
-- April 12
+- ### April 12 ### 
   - Created an RDS instance for the database
   - Created tables as per the decided schema
   - Added user, hotel and room tables
   - Inserted mock data to the tables
-- April 15
+- ### April 15 ### 
   - Created user login API
   - Created user signup API
   - Tested the APIs using Postman
@@ -202,12 +201,12 @@ While designing the website, we adhered to the primary concept of simplicity whi
 
 ## Week 3:
 
-- April 19
+- ### April 19 ### 
   - Created Landing page for the application
   - Created Navbar with login, signup and home buttons
   - Created Modals for login and signup
   - Integrated the login/signup with their APIs
-- April 22
+- ### April 22 ### 
   - Added hotel search on Home page
   - Created API for employee login
   - Created Employee login Modal
@@ -215,13 +214,13 @@ While designing the website, we adhered to the primary concept of simplicity whi
 
 ## Week 4:
 
-- April 26
+- ### April 26 ### 
   - Created hotel search API
   - Created view rooms API 
   - Added component to display hotels
   - Added modals to display room data for the selected hotel
   - Added amenities for selection in the modal
-- April 29
+- ### April 29 ### 
   - Added Book Room button
   - Create Book successful Modal
   - Create Boooking Error Modal
@@ -230,7 +229,7 @@ While designing the website, we adhered to the primary concept of simplicity whi
 
 ## Week 5:
 
-- May 3
+- ### May 3 ### 
   - Added My Trips page in frontend
   - Created API to fetch the current bookings
   - Implemented customer loyalty logic based on their signup and bookings
@@ -238,7 +237,7 @@ While designing the website, we adhered to the primary concept of simplicity whi
   - Implemented API to update and cancel existing bookings
   - Added update booking modal on My Trips page
   - Added cancel booking button on My Trips page
-- May 6
+- ### May 6 ### 
   - Implemented API to fetch all hotels as Employee
   - Implemented API to add hotel as Employee
   - Created component to display all hotels on Employee Landing Page
@@ -247,10 +246,10 @@ While designing the website, we adhered to the primary concept of simplicity whi
 
 ## Week 6:
 
-- May 10
+- ### May 10 ### 
   - Implemented dynamic pricing
   - Local storage Implementation
-- May 13
+- ### May 13 ### 
   - Deployed the backend application
   - Updated frontend with new API routes
   - Tested the working of the application
