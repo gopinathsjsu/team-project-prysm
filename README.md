@@ -157,6 +157,8 @@ While designing the website, we adhered to the primary concept of simplicity whi
 - **User** can select location/check-in/checkout date for Hotel search
 - **User** can select the type of room
 - **User** can book a room with/without rewards
+- **User** can select amenities at the time of booking a room in a hotel
+- **User** can only book stay in a hotel for **not more than 7 days** 
 - **User** can select the number of rooms/people.
 - Based on the **number of people** type of room will be displayed
 - **Loyalty points** for user will be incrementally aded since the day user had created an account
